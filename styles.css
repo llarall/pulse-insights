@@ -1,0 +1,191 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+a, a:hover, a:visited {
+    color:#2500ba;
+}
+
+.info-section, .step1 {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.info-section h2, .step1 h2 {
+    margin-top: 0;
+    font-size: 1.4em;
+}
+
+.info-section h3, .step1 h3 {
+    margin-top: 20px;
+    margin-bottom:0px;
+    font-size: 1.2em;
+}
+
+.info-section p, .step1 p {
+    margin: 5px 0;
+    line-height: 1.5;
+}
+
+.step1 {
+    text-align:center;
+}
+
+#dropZone {
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    margin: 20px 0;
+    cursor: pointer;
+}
+
+#dropZone.dragover {
+    background-color: #e1f5fe;
+    border-color: #2196f3;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f5f5f5;
+    position: relative;
+    cursor: pointer;
+    padding-right: 25px;
+}
+
+th::after {
+    content: '';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+th.sorted-asc::after {
+    content: '↑';
+}
+
+th.sorted-desc::after {
+    content: '↓';
+}
+
+th:hover {
+    background-color: #e5e5e5;
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.table-title {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.analysis-section {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.analysis-section h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.analysis-section ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.analysis-section li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.accordion-btn {
+    margin-top: 15px;
+    padding: 8px 16px;
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.accordion-btn:hover {
+    background-color: #e5e7eb;
+}
+
+.more-content {
+    margin-top: 20px;
+}
+
+.course-info-section {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.course-info-section table {
+    width: auto;
+    margin: 10px 0;
+}
+
+.course-info-section th {
+    background-color: transparent;
+    font-weight: bold;
+    cursor: default;
+    padding-right: 15px;
+}
+
+.course-info-section th:hover {
+    background-color: transparent;
+}
+
+.course-info-section th::after {
+    content: none;
+}
+
+.course-info-section td {
+    padding: 8px 15px;
+}
+
+.instructions {
+    display: inline-block;
+    text-align: left; /* Left-align the list within the block */
+    margin-top: 20px;
+}
+
+#what-now {
+    margin-top:20px;
+}

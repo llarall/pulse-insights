@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PULSE Insights Tool v2.0.3-beta</title>
+    <script src="xlsx.full.min.js"></script>
+    <script src="FileService.js?v=2.0.3beta"></script>
+    <script src="ArrayService.js?v=2.0.3beta"></script>
+    <script src="MathService.js?v=2.0.3beta"></script>  
+    <link rel="stylesheet" href="styles.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">    
+</head>
+<body>
+    <h1>🧡 PULSE Insights Tool v2.0.3-beta</h1>
+    
+    <div class="info-section">
+        <h2>About this Tool</h2>
+        <p>This tool instantly analyzes <a href="https://docs.google.com/document/d/e/2PACX-1vRCVPhvZkmnl1D7D8-wKyMDNJTqiagvtlPJrxWiwhbTctoex1eJbPuMWqcZJ6VF90yTuqwvrhxRp67J/pub" target="_blank">PULSE</a> and SLE survey data you provide. It compares responses from students who are less and more represented in their engineering programs. All data processing is done locally in your browser - <strong>no data is sent to or stored on any server</strong>. <a href="#" id="learnMore">Show More About this Tool</a></p>
+        
+        <div class="more-content" style="display: none">
+            <h3>Prerequisites</h3>
+            <p>This tool will only work properly if you added the PULSE questions to your SLE. The PULSE questions are currently only available to College of Engineering faculty at Oregon State University. <a href="https://docs.google.com/document/d/e/2PACX-1vRCVPhvZkmnl1D7D8-wKyMDNJTqiagvtlPJrxWiwhbTctoex1eJbPuMWqcZJ6VF90yTuqwvrhxRp67J/pub" target="_blank">How to add the questions / more information</a></p>
+
+            <h3>Can I see an example report?</h3>
+            <p><a href="example.pdf" target="_blank">Example of what this tool will output</a></p>
+
+            <h3>How it Works</h3>
+            <p>The tool splits respondents into "LowRep" and "HighRep" groups based on their responses to the representation question. It then calculates statistics for each group and identifies significant differences in their experiences. Questions marked with 🧡 are PULSE questions related to student representation, success, completion, belonging, and satisfaction.</p>
+            
+            <h3>Methodology</h3>
+            <p>When "median" appears in this tool, it refers to the interpolated median. The interpolated median accounts for ties in the data by using the distribution of responses around the middle value. This provides a more nuanced measure than a traditional median when working with Likert scale data.</p>
+                        
+            <h3>Credits</h3>
+            <p>Created by Claude (Anthropic) and Lara Letaw</p>
+        </div>
+    </div>
+    
+    <div class="step1">
+        <h2>Step 1:</h2>
+        <p>Export your SLE data as an Excel file. <a href="#" id="show-instructions">Show Instructions</a></p>
+        <div class="more-step1-content" style="display:none">
+            <img src="howto.gif" />
+            <div class="instructions">
+                <ol>
+                    <li>Log in to the <a href="https://beav.es/Student-Learning-Survey" target="_blank">SLE system</a> (opens in a new tab)</li>
+                    <li>Check the checkboxes next to the course/sections for which you want to export SLE data</li>
+                    <li>Select the "You have X items in your batch..." link that's near the top of the page</li>
+                    <li>On the Batch Download popup, select "An Excel File" as the Output Type</li>
+                    <li>Download the file once the export is complete</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div id="dropZone">
+        <h2>Step 2:</h2>
+        <p>Drag & drop your Excel file here or click to select.<br />Your analysis and full results should appear below.</p>
+        <input type="file" id="fileInput" accept=".xlsx,.xls" style="display: none">
+    </div>
+
+    <div id="loading" class="loading">Processing file...</div>
+    <div id="output" class="table-container"></div>
+
+    <script src="UI.js?v=2.0.3beta"></script>
+
+</body>
+</html>
