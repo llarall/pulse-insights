@@ -325,7 +325,7 @@
 
         const sortingInfo = document.createElement('p');
         sortingInfo.className = 'sorting-instructions';
-        sortingInfo.textContent = 'Sort by clicking a any column heading.';
+        sortingInfo.textContent = 'Sort by clicking a column heading.';
         output.appendChild(sortingInfo);
 
         const table = document.createElement('table');
