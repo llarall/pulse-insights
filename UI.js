@@ -325,7 +325,7 @@
 
         const sortingInfo = document.createElement('p');
         sortingInfo.className = 'sorting-instructions';
-        sortingInfo.textContent = 'Click on any column heading to sort the table by that column.';
+        sortingInfo.textContent = 'Sort by clicking a any column heading.';
         output.appendChild(sortingInfo);
 
         const table = document.createElement('table');
@@ -353,42 +353,73 @@
             ].includes(fullResult.header);
             tdHeader.textContent = isPulseQuestion ? '🧡 ' + fullResult.header : fullResult.header;
             tr.appendChild(tdHeader);
-            
+
+
+
+// Highlight low numbers.    
+
+            function getColorClass(value) {
+                if (typeof value !== 'number' || isNaN(value)) return ''; // No class for non-numeric values
+                if (value <= 5) return 'low-value';
+                if (value <= 6) return 'medium-value';
+                return 'high-value';
+            }
+            function createCell(value, isNumeric = false) {
+                const td = document.createElement('td');
+                td.textContent = isNumeric && typeof value === 'number' ? value.toFixed(2) : value || 'N/A';
+
+                if (isNumeric) {
+                    const colorClass = getColorClass(value);
+                    if (colorClass) td.classList.add(colorClass);
+                }
+
+                return td;
+            }
+
             const tdMedian = document.createElement('td');
             tdMedian.textContent = fullResult.median ? fullResult.median.toFixed(2) : 'N/A';
-            tr.appendChild(tdMedian);
-
+            // tr.appendChild(tdMedian);
+            tr.appendChild(createCell(fullResult.median, true));
+            
             const tdLowRepMedian = document.createElement('td');
             tdLowRepMedian.textContent = lowRepResult.median ? lowRepResult.median.toFixed(2) : 'N/A';
-            tr.appendChild(tdLowRepMedian);
+            // tr.appendChild(tdLowRepMedian);
+            tr.appendChild(createCell(lowRepResult.median, true));
 
             const tdHighRepMedian = document.createElement('td');
             tdHighRepMedian.textContent = highRepResult.median ? highRepResult.median.toFixed(2) : 'N/A';
-            tr.appendChild(tdHighRepMedian);
+            // tr.appendChild(tdHighRepMedian);
+            tr.appendChild(createCell(highRepResult.median, true));
 
             const tdN = document.createElement('td');
             tdN.textContent = Math.round(fullResult.n);
-            tr.appendChild(tdN);
+            // tr.appendChild(tdN);
+            tr.appendChild(createCell(Math.round(fullResult.n)));
 
             const tdLowRepN = document.createElement('td');
             tdLowRepN.textContent = Math.round(lowRepResult.n);
-            tr.appendChild(tdLowRepN);
+            // tr.appendChild(tdLowRepN);
+            tr.appendChild(createCell(Math.round(lowRepResult.n)));
 
             const tdHighRepN = document.createElement('td');
             tdHighRepN.textContent = Math.round(highRepResult.n);
-            tr.appendChild(tdHighRepN);
+            // tr.appendChild(tdHighRepN);
+            tr.appendChild(createCell(Math.round(highRepResult.n)));
 
             const tdRank = document.createElement('td');
             tdRank.textContent = results.fullRanks[index] || 'N/A';
-            tr.appendChild(tdRank);
+            // tr.appendChild(tdRank);
+            tr.appendChild(createCell(results.fullRanks[index]));
 
             const tdLowRepRank = document.createElement('td');
             tdLowRepRank.textContent = results.lowRepRanks[index] || 'N/A';
-            tr.appendChild(tdLowRepRank);
+            // tr.appendChild(tdLowRepRank);
+            tr.appendChild(createCell(results.lowRepRanks[index]));
 
             const tdHighRepRank = document.createElement('td');
             tdHighRepRank.textContent = results.highRepRanks[index] || 'N/A';
-            tr.appendChild(tdHighRepRank);
+            // tr.appendChild(tdHighRepRank);
+            tr.appendChild(createCell(results.highRepRanks[index]));
 
             table.appendChild(tr);
         });
