@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PULSE Insights Tool v2.0.3-beta</title>
+    <title>PULSE Insights Tool v2.1-beta</title>
     <script src="xlsx.full.min.js"></script>
-    <script src="FileService.js?v=2.0.3beta"></script>
-    <script src="ArrayService.js?v=2.0.3beta"></script>
-    <script src="MathService.js?v=2.0.3beta"></script>  
+    <script src="FileService.js?v=2.1beta"></script>
+    <script src="ArrayService.js?v=2.1beta"></script>
+    <script src="MathService.js?v=2.1beta"></script>  
     <link rel="stylesheet" href="styles.css">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -15,7 +15,7 @@
     <link rel="manifest" href="site.webmanifest">    
 </head>
 <body>
-    <h1>🧡 PULSE Insights Tool v2.0.3-beta</h1>
+    <h1>🧡 PULSE Insights Tool v2.1-beta</h1>
     
     <div class="info-section">
         <h2>About this Tool</h2>
@@ -60,6 +60,27 @@
         <h2>Step 2:</h2>
         <p>Drag & drop your Excel file here or click to select.<br />Your analysis and full results should appear below.</p>
         <input type="file" id="fileInput" accept=".xlsx,.xls" style="display: none">
+    </div>
+
+    <div class="step3">
+        <h2>Step 3:</h2>
+        <p>Make improvements using one or more of these options.</p>
+        
+        <section class="gallery">
+            <figure>
+                <img src="teams.png" alt="Microsoft Teams Chat" />
+                <figcaption>Chat with expert help via Teams.</figcaption>
+            </figure>
+            <figure>
+                <img src="toolbox-emoji.png" alt="EITC Toolbox" />
+                <figcaption>Access the EITC Toolbox of Resources (Canvas)</figcaption>
+            </figure>
+            <figure>
+                <img src="copilot.png" alt="Microsoft Copilot" />
+                <figcaption>Let the FERPA-approved Copilot Agent analyze the data you provided 
+                    and recommend evidence-based resources.</figcaption>
+            </figure>
+        </section>
     </div>
 
     <div id="loading" class="loading">Processing file...</div>
