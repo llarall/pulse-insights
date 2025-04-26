@@ -1,3 +1,4 @@
+import { AnalysisInformation } from "./components/AnalysisInformation/AnalysisInformation";
 import { CourseInformation } from "./components/CourseInformation/CourseInformation";
 import { InfoSection } from "./components/InfoSection";
 import { StatsTable } from "./components/StatsTable/StatsTable";
@@ -16,6 +17,8 @@ export const App = () => {
 			<UploadInput />
 
 			<CourseInformation />
+
+			<AnalysisInformation />
 
 			<StatsTable />
 		</main>
