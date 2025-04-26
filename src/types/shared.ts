@@ -32,3 +32,22 @@ export type TRankedSurveyStats = TGroupedSurveyStats & {
 	lowRepRank: number;
 	highRepRank: number;
 };
+export type TSurveySummary = {
+	lowRepLessFavorablePct: number;
+	highRepLessFavorablePct: number;
+	sameResponsePct: number;
+	topMedianDifferences: {
+		questionKey: TSurveyQuestionKeys;
+		difference: number;
+		lowRepMedian: number;
+		highRepMedian: number;
+	}[];
+	topRankDifferences: {
+		questionKey: TSurveyQuestionKeys;
+		rankDifference: number;
+		lowRepRank: number;
+		highRepRank: number;
+	}[];
+	averageLowRepMedian: number;
+	averageHighRepMedian: number;
+};
