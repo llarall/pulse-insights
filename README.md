@@ -16,6 +16,14 @@ https://web.engr.oregonstate.edu/~letawl/pulse/
 
 ## 📦 Installation
 
+Ensure you're using the specified node version by installing [nvm](https://github.com/nvm-sh/nvm) and then run
+
+```
+nvm use
+```
+
+Install packages
+
 ```bash
 yarn install
 ```
