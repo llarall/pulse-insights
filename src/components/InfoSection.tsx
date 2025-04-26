@@ -34,7 +34,7 @@ export const InfoSection = () => {
 						This tool will only work properly if you added the PULSE questions
 						to your SLE. The PULSE questions are currently only available to
 						College of Engineering faculty at Oregon State University.{" "}
-						<a href={LINKS.howToAddQuestions} target="_blank">
+						<a href={LINKS.pulseQuestions} target="_blank">
 							How to add the questions / more information
 						</a>
 					</p>
