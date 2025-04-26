@@ -1,0 +1,37 @@
+ /* https://communications.oregonstate.edu/brand-guide/visual-identity/colors */
+ 
+ :root {
+    /* oranges, yellows,  */
+    --beaverOrange: #D73F09;
+    --solarFlare: #D3832B;
+    --luminance:#FFB500;
+    --candela:#FDD26E;
+
+    /* blues */
+    --stratosphere: #006A8E;
+    --starCanvas: #003B5C;
+    --moondust: #C6DAE7;
+
+    /* blue-greens */
+    --rogueWave: #0D5257;
+    --highTide:#00859B;
+    --seafoam: #B8DDE1;
+
+    /* greens */
+    --pineStand:#4A773C;
+    --reindeerMoss: #C4D6A4;
+    --reindeerMossBright: #659f01;
+    --hopBine: #AA9D2E;
+        
+    /* Grayscale and earth*/
+    --paddletailBlack:#000;
+    --darkBg: #212529;
+    --text: #423e3c;
+    --highDesert:#7A6855;
+    --coastline:#A7ACA2;
+    --crater:#8E9089;
+    --till:#B7A99A;
+    --navBg: #ffffff;
+    --offWhite: #f7f5f5;
+    --bucktoothWhite: #fff;
+}
