@@ -1,0 +1,38 @@
+.container {
+	overflow-x: auto;
+	margin-top: 1rem;
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.875rem;
+
+		thead {
+			background-color: #f3f4f6;
+			font-weight: 600;
+		}
+
+		th,
+		td {
+			border: 1px solid #d1d5db;
+			padding: 0.5rem;
+			text-align: center;
+			vertical-align: middle;
+		}
+
+		tr:nth-child(even) {
+			background-color: #fafafa;
+		}
+	}
+}
+
+.lowValue {
+	background-color: #fde2e2;
+}
+
+.questionCol {
+	text-align: left;
+	max-width: 320px;
+	padding-left: 1rem;
+	font-weight: 500;
+}
