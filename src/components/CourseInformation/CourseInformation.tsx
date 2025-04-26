@@ -15,7 +15,7 @@ export const CourseInformation = () => {
 		course || {};
 
 	return (
-		<Card>
+		<Card gray>
 			<h2>Course Information</h2>
 			<table className={styles.table}>
 				<tbody>
