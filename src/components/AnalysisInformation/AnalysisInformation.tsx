@@ -6,6 +6,9 @@ import { calculateSummaryStats } from "@/utils/survey";
 import { useAtomValue } from "jotai";
 import { Card } from "../Card/Card";
 
+/**
+ * Displays the in-depth analysis on the response numbers
+ */
 export const AnalysisInformation = () => {
 	const course = useAtomValue(courseAtom);
 
