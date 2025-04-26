@@ -3,6 +3,7 @@ import type {
 	TGroupedSurveyStats,
 	TRankedSurveyStats,
 	TSurveyQuestionKeys,
+	TSurveySummary,
 } from "@/types/shared";
 import { PULSE_QUESTIONS } from "../constants/surveyQuestions";
 import { calculateTukeyInterpolatedMedian } from "./math";
@@ -83,16 +84,24 @@ export const rankBy = (
 	const ranks = new Map<TSurveyQuestionKeys, number>();
 
 	let currentRank = 1;
+	let previousValue: number | null = null;
+	let tieCount = 0;
 
 	for (let i = 0; i < sorted.length; i++) {
 		const currentValue = getValue(sorted[i])!;
-		const prevValue = i > 0 ? getValue(sorted[i - 1])! : null;
 
-		if (prevValue !== null && currentValue < prevValue) {
-			currentRank = i + 1;
+		if (previousValue !== null) {
+			if (currentValue === previousValue) {
+				tieCount++;
+			} else {
+				currentRank += tieCount + 1;
+				tieCount = 0;
+			}
 		}
 
 		ranks.set(sorted[i].questionKey, currentRank);
+
+		previousValue = currentValue;
 	}
 
 	return ranks;
@@ -122,3 +131,69 @@ export const rankGroupedStats = (
  */
 export const isPulseQuestion = (questionKey: TSurveyQuestionKeys) =>
 	PULSE_QUESTIONS.includes(questionKey);
+
+/**
+ * Calculates key summary statistics from a list of ranked survey stats.
+ *
+ * Computes:
+ * - Percentage of questions where LowRep students responded less favorably
+ * - Percentage where HighRep students responded less favorably
+ * - Percentage where responses were the same
+ * - Top 2 questions with largest median differences
+ * - Top 2 questions with largest rank differences
+ * - Average LowRep median
+ * - Average HighRep median
+ */
+export const calculateSummaryStats = (
+	stats: TRankedSurveyStats[]
+): TSurveySummary => {
+	const total = stats.length;
+
+	let lowRepLess = 0;
+	let highRepLess = 0;
+	let same = 0;
+
+	let lowRepSum = 0;
+	let highRepSum = 0;
+
+	const medianDifferences = [];
+	const rankDifferences = [];
+
+	for (const stat of stats) {
+		const { lowRepMedian, highRepMedian, lowRepRank, highRepRank } = stat;
+
+		if (lowRepMedian < highRepMedian) lowRepLess++;
+		else if (highRepMedian < lowRepMedian) highRepLess++;
+		else same++;
+
+		lowRepSum += lowRepMedian;
+		highRepSum += highRepMedian;
+
+		medianDifferences.push({
+			questionKey: stat.questionKey,
+			difference: Math.abs(highRepMedian - lowRepMedian),
+			lowRepMedian,
+			highRepMedian,
+		});
+
+		rankDifferences.push({
+			questionKey: stat.questionKey,
+			rankDifference: Math.abs(highRepRank - lowRepRank),
+			lowRepRank,
+			highRepRank,
+		});
+	}
+
+	medianDifferences.sort((a, b) => b.difference - a.difference);
+	rankDifferences.sort((a, b) => b.rankDifference - a.rankDifference);
+
+	return {
+		lowRepLessFavorablePct: total ? (lowRepLess / total) * 100 : 0,
+		highRepLessFavorablePct: total ? (highRepLess / total) * 100 : 0,
+		sameResponsePct: total ? (same / total) * 100 : 0,
+		topMedianDifferences: medianDifferences.slice(0, 2),
+		topRankDifferences: rankDifferences.slice(0, 2),
+		averageLowRepMedian: total ? lowRepSum / total : 0,
+		averageHighRepMedian: total ? highRepSum / total : 0,
+	};
+};

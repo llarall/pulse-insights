@@ -1,6 +1,11 @@
-import type { TCourse, TGroupedSurveyStats } from "@/types/shared";
+import type {
+	TCourse,
+	TGroupedSurveyStats,
+	TRankedSurveyStats,
+} from "@/types/shared";
 import { describe, expect, it } from "vitest";
 import {
+	calculateSummaryStats,
 	getResponsesForQuestion,
 	isPulseQuestion,
 	rankBy,
@@ -165,5 +170,89 @@ describe("isPulseQuestion", () => {
 		const result = isPulseQuestion("question2");
 
 		expect(result).toEqual(false);
+	});
+});
+
+describe("calculateSummaryStats", () => {
+	const mockStats: TRankedSurveyStats[] = [
+		{
+			questionKey: "question1",
+			overallMedian: 5,
+			lowRepMedian: 4,
+			highRepMedian: 6,
+			lowRepN: 50,
+			highRepN: 60,
+			rank: 1,
+			lowRepRank: 2,
+			highRepRank: 1,
+			n: 0,
+		},
+		{
+			questionKey: "question2",
+			overallMedian: 5,
+			lowRepMedian: 5,
+			highRepMedian: 5,
+			lowRepN: 50,
+			highRepN: 60,
+			rank: 2,
+			lowRepRank: 3,
+			highRepRank: 3,
+			n: 0,
+		},
+		{
+			questionKey: "question3",
+			overallMedian: 5,
+			lowRepMedian: 6,
+			highRepMedian: 5,
+			lowRepN: 50,
+			highRepN: 60,
+			rank: 3,
+			lowRepRank: 1,
+			highRepRank: 4,
+			n: 0,
+		},
+	];
+
+	it("calculates percentages correctly", () => {
+		const summary = calculateSummaryStats(mockStats);
+
+		expect(summary.lowRepLessFavorablePct).toBeCloseTo(33.33, 1);
+		expect(summary.highRepLessFavorablePct).toBeCloseTo(33.33, 1);
+		expect(summary.sameResponsePct).toBeCloseTo(33.33, 1);
+	});
+
+	it("finds top 2 median differences", () => {
+		const summary = calculateSummaryStats(mockStats);
+
+		expect(summary.topMedianDifferences.length).toBe(2);
+		expect(summary.topMedianDifferences[0].questionKey).toBe("question1");
+		expect(summary.topMedianDifferences[1].questionKey).toBe("question3");
+	});
+
+	it("finds top 2 rank differences", () => {
+		const summary = calculateSummaryStats(mockStats);
+
+		expect(summary.topRankDifferences.length).toBe(2);
+		expect(summary.topRankDifferences[0].questionKey).toBe("question3");
+		expect(summary.topRankDifferences[1].questionKey).toBe("question1");
+	});
+
+	it("calculates averages correctly", () => {
+		const summary = calculateSummaryStats(mockStats);
+
+		expect(summary.averageLowRepMedian).toBeCloseTo((4 + 5 + 6) / 3, 5);
+		expect(summary.averageHighRepMedian).toBeCloseTo((6 + 5 + 5) / 3, 5);
+	});
+
+	it("handles empty input", () => {
+		const summary = calculateSummaryStats([]);
+
+		expect(summary.lowRepLessFavorablePct).toBe(0);
+		expect(summary.highRepLessFavorablePct).toBe(0);
+		expect(summary.sameResponsePct).toBe(0);
+		expect(summary.topMedianDifferences.length).toBe(0);
+		expect(summary.topRankDifferences.length).toBe(0);
+		expect(summary.averageLowRepMedian).toBe(0);
+		expect(summary.averageHighRepMedian).toBe(0);
 	});
 });
