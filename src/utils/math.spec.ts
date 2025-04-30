@@ -1,30 +1,5 @@
-import {
-	calculateInterpolatedMedian,
-	calculateTukeyInterpolatedMedian,
-} from "@/utils/math";
+import { calculateTukeyInterpolatedMedian } from "@/utils/math";
 import { describe, expect, it } from "vitest";
-
-describe("calculateInterpolatedMedian", () => {
-	it("returns null for empty array", () => {
-		expect(calculateInterpolatedMedian([])).toBeNull();
-	});
-
-	it("returns middle value for odd length array", () => {
-		expect(calculateInterpolatedMedian([1, 3, 2])).toBe(2);
-	});
-
-	it("returns interpolated median for even length array", () => {
-		expect(calculateInterpolatedMedian([1, 2, 3, 4])).toBe(2.5);
-	});
-
-	it("handles already sorted arrays", () => {
-		expect(calculateInterpolatedMedian([10, 20, 30, 40])).toBe(25);
-	});
-
-	it("handles arrays with duplicated numbers", () => {
-		expect(calculateInterpolatedMedian([1, 2, 2, 3])).toBe(2);
-	});
-});
 
 describe("calculateTukeyInterpolatedMedian", () => {
 	it("returns 0 for empty array", () => {

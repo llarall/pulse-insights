@@ -1,30 +1,4 @@
 /**
- * Calculates the interpolated median of a sorted array.
- * Returns null if the array is empty.
- */
-export function calculateInterpolatedMedian(arr: number[]): number | null {
-	if (arr.length === 0) return null;
-
-	const sorted = [...arr].sort((a, b) => a - b);
-	const N = sorted.length;
-
-	const position = (N - 1) / 2;
-	const lowerIndex = Math.floor(position);
-	const upperIndex = Math.ceil(position);
-
-	const lowerValue = sorted[lowerIndex];
-	const upperValue = sorted[upperIndex];
-
-	if (lowerIndex === upperIndex) {
-		return lowerValue;
-	}
-
-	const fractionalPart = position - lowerIndex;
-
-	return lowerValue + (upperValue - lowerValue) * fractionalPart;
-}
-
-/**
  * Calculates the Tukey interpolated median for a list of numbers.
  *
  * Unlike a normal median, this method adjusts the result when many values
