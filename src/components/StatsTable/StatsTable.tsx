@@ -1,5 +1,4 @@
 import { courseAtom } from "@/atoms/courseAtom";
-import { SURVEY_QUESTIONS_MAP } from "@/constants/surveyQuestions";
 import { useSurveyStats } from "@/hooks/useSurveyStats";
 import type { TRankedSurveyStats } from "@/types/shared";
 import { isPulseQuestion } from "@/utils/survey";
@@ -9,10 +8,10 @@ import { Card } from "../Card/Card";
 import styles from "./StatsTable.module.css";
 
 const TABLE_HEADERS: Record<
-	keyof TRankedSurveyStats,
+	keyof Omit<TRankedSurveyStats, "questionKey">,
 	{ label: string; sortable: boolean }
 > = {
-	questionKey: { label: "Question", sortable: true },
+	questionText: { label: "Question", sortable: true },
 	overallMedian: { label: "Median", sortable: true },
 	lowRepMedian: { label: "Low Rep Median", sortable: true },
 	highRepMedian: { label: "High Rep Median", sortable: true },
@@ -41,16 +40,22 @@ export const StatsTable = () => {
 		if (sortDirection === "none") return rankedStats;
 
 		return [...rankedStats].sort((a, b) => {
-			const aValue = a[sortKey] ?? -Infinity;
-			const bValue = b[sortKey] ?? -Infinity;
+			const aValue = a[sortKey];
+			const bValue = b[sortKey];
 
-			if (aValue === bValue) return 0;
-
-			if (sortDirection === "asc") {
-				return aValue > bValue ? 1 : -1;
-			} else {
-				return aValue < bValue ? 1 : -1;
+			if (sortKey === "questionText") {
+				const aStr = typeof aValue === "string" ? aValue : "";
+				const bStr = typeof bValue === "string" ? bValue : "";
+				return sortDirection === "asc"
+					? aStr.localeCompare(bStr)
+					: bStr.localeCompare(aStr);
 			}
+
+			const aNum = typeof aValue === "number" ? aValue : -Infinity;
+			const bNum = typeof bValue === "number" ? bValue : -Infinity;
+
+			if (aNum === bNum) return 0;
+			return sortDirection === "asc" ? aNum - bNum : bNum - aNum;
 		});
 	}, [rankedStats, sortKey, sortDirection]);
 
@@ -111,19 +116,20 @@ export const StatsTable = () => {
 								highRepMedian,
 								highRepN,
 								highRepRank,
+								questionText,
 								n,
 								rank,
 								overallMedian,
 							}) => (
 								<tr key={questionKey}>
 									<td className={styles.questionCol}>
-										{isPulseQuestion(questionKey) && "🧡 "}
+										{isPulseQuestion(questionText) && "🧡 "}
 
-										{SURVEY_QUESTIONS_MAP[questionKey]}
+										{questionText}
 									</td>
 									<td
 										className={
-											overallMedian && overallMedian < 5 ? styles.lowValue : ""
+											overallMedian && overallMedian <= 5 ? styles.lowValue : ""
 										}
 									>
 										{overallMedian?.toFixed(2) ?? "—"}
@@ -131,7 +137,7 @@ export const StatsTable = () => {
 
 									<td
 										className={
-											lowRepMedian && lowRepMedian < 5 ? styles.lowValue : ""
+											lowRepMedian && lowRepMedian <= 5 ? styles.lowValue : ""
 										}
 									>
 										{lowRepMedian?.toFixed(2) ?? "—"}
@@ -139,7 +145,7 @@ export const StatsTable = () => {
 
 									<td
 										className={
-											highRepMedian && highRepMedian < 5 ? styles.lowValue : ""
+											highRepMedian && highRepMedian <= 5 ? styles.lowValue : ""
 										}
 									>
 										{highRepMedian?.toFixed(2) ?? "—"}
