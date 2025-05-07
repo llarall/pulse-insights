@@ -41,7 +41,7 @@ export const InfoSection = () => {
 
 					<h3>Can I see an example report?</h3>
 					<p>
-						<a href="example.pdf" target="_blank">
+						<a href="/public/files/example.pdf" target="_blank">
 							Example of what this tool will output
 						</a>
 					</p>

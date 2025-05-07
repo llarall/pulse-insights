@@ -35,7 +35,7 @@ export const UploadInput = () => {
 				groupCoursesWithSurveyResponses(surveyResponses);
 			const groupedCourses = sanitizeCourses(unsanitizedGroupCourses);
 
-			// // Only supporting one right now
+			// Only supporting one right now
 			if (groupedCourses.length > 0) {
 				setError("There is more than one course in your files.");
 				setCourse(groupedCourses[0]);
