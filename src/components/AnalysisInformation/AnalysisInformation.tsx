@@ -1,7 +1,7 @@
 import { courseAtom } from "@/atoms/courseAtom";
 import { LINKS } from "@/constants/links";
-import { SURVEY_QUESTIONS_MAP } from "@/constants/surveyQuestions";
 import { useSurveyStats } from "@/hooks/useSurveyStats";
+import { decodeQuestion } from "@/utils/encoding";
 import { calculateSummaryStats } from "@/utils/survey";
 import { useAtomValue } from "jotai";
 import { Card } from "../Card/Card";
@@ -21,8 +21,8 @@ export const AnalysisInformation = () => {
 	const topMedianQuestions = summary.topMedianDifferences.map((item) => {
 		return (
 			<li key={item.questionKey}>
-				<strong>{SURVEY_QUESTIONS_MAP[item.questionKey]}</strong> with a
-				difference of <strong>{item.difference.toFixed(2)}</strong> (LowRep:{" "}
+				<strong>{decodeQuestion(item.questionKey)}</strong> with a difference of{" "}
+				<strong>{item.difference.toFixed(2)}</strong> (LowRep:{" "}
 				<strong>{item.lowRepMedian.toFixed(2)}</strong>, HighRep:{" "}
 				<strong>{item.highRepMedian.toFixed(2)}</strong>)
 			</li>
@@ -32,7 +32,7 @@ export const AnalysisInformation = () => {
 	const topRankQuestions = summary.topRankDifferences.map((item) => {
 		return (
 			<li key={item.questionKey}>
-				<strong>{SURVEY_QUESTIONS_MAP[item.questionKey]}</strong> with a rank
+				<strong>{decodeQuestion(item.questionKey)}</strong> with a rank
 				difference of <strong>{item.rankDifference}</strong> (LowRep rank:{" "}
 				<strong>{item.lowRepRank}</strong>, HighRep rank:{" "}
 				<strong>{item.highRepRank}</strong>)
