@@ -1,7 +1,7 @@
 import type { TRow } from "@/types/shared";
 import { describe, expect, it } from "vitest";
 
-import { normalizeHeader, parseSheetRowsToResponses } from "@/utils/file";
+import { parseSheetRowsToResponses } from "@/utils/file";
 
 const HEADER_ROW = [
 	"RESPONSE #",
@@ -40,23 +40,6 @@ const HEADER_ROW = [
 	"Please comment on how the course could better support your learning.",
 	'You have the option of signing your comments on this evaluation. If you click the "yes" button, your comments will be sent to BOTH the instructor and the instructor\'s supervisor and your name will be identified with the comments (i.e. you will no longer be anonymous). If you click the "no" button, your comments will be available ONLY to the instructor (not the supervisor) and you will NOT be identified with your comments.',
 ];
-
-describe("normalizeHeader", () => {
-	it("should normalize a simple header", () => {
-		expect(normalizeHeader("First Name")).toBe("firstName");
-		expect(normalizeHeader("Course ID")).toBe("courseId");
-		expect(normalizeHeader("RESPONSE #")).toBe("response");
-	});
-
-	it("should remove special characters and properly camelCase", () => {
-		expect(normalizeHeader("Students' non-academic needs")).toBe(
-			"studentsNonAcademicNeeds"
-		);
-		expect(
-			normalizeHeader("Feedback on test, assignments and/or graded activities")
-		).toBe("feedbackOnTestAssignmentsAndOrGradedActivities");
-	});
-});
 
 describe("parseSheetRowsToResponses", () => {
 	it("should parse valid survey rows and clean them", () => {
@@ -149,14 +132,4 @@ describe("parseSheetRowsToResponses", () => {
 		const responses = parseSheetRowsToResponses([]);
 		expect(responses).toEqual([]);
 	});
-
-	it("should skip empty rows", () => {
-		const rows: TRow[] = [HEADER_ROW, []];
-
-		const responses = parseSheetRowsToResponses(rows);
-		expect(responses.length).toBe(0);
-	});
 });
-
-// You could also later write integration tests for `parseSurveyResponsesFromFile`
-// but it requires mocking File and arrayBuffer, so might be better for a follow-up if you need!

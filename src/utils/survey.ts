@@ -2,21 +2,14 @@ import type {
 	TCourse,
 	TGroupedSurveyStats,
 	TRankedSurveyStats,
-	TSurveyQuestionKeys,
 	TSurveySummary,
 } from "@/types/shared";
-import { PULSE_QUESTIONS } from "../constants/surveyQuestions";
+import {
+	PULSE_QUESTIONS,
+	REP_QUESTION_KEY,
+} from "../constants/surveyQuestions";
+import { decodeQuestion } from "./encoding";
 import { calculateTukeyInterpolatedMedian } from "./math";
-
-/**
- * Retrieves the array of responses for a given question text from a course.
- */
-export const getResponsesForQuestion = (
-	responses: TCourse["responses"],
-	questionKey: TSurveyQuestionKeys
-): number[] => {
-	return responses[questionKey] ?? [];
-};
 
 /**
  * Calculates median stats for each question,
@@ -24,31 +17,26 @@ export const getResponsesForQuestion = (
  * using a column-oriented input (Record<questionKey, number[]>).
  */
 export const calculateGroupedSurveyStatsFromColumns = (
-	responses: Record<TSurveyQuestionKeys, number[]>,
-	baseKey: TSurveyQuestionKeys = "question7"
+	responses: TCourse["responses"],
+	baseKey: string = REP_QUESTION_KEY
 ): TGroupedSurveyStats[] => {
 	const isValid = (n: number): boolean =>
 		typeof n === "number" && !isNaN(n) && n > 0 && n <= 6;
 
-	const baseResponses = responses[baseKey];
+	const baseResponses = responses[baseKey] ?? [];
 	const repFiltered = baseResponses.map((n) => (isValid(n) ? n : null));
 	const repValid = repFiltered.filter((n): n is number => n !== null);
 	const repMedian = calculateTukeyInterpolatedMedian(repValid);
 
-	// Prebuild group index sets
 	const lowRepIndices = new Set<number>();
 	const highRepIndices = new Set<number>();
 
 	repFiltered.forEach((val, i) => {
 		if (val === null) return;
-		if (val <= repMedian!) lowRepIndices.add(i);
-		else highRepIndices.add(i);
+		(val <= repMedian! ? lowRepIndices : highRepIndices).add(i);
 	});
 
-	const questionKeys = Object.keys(responses) as TSurveyQuestionKeys[];
-
-	return questionKeys.map((questionKey) => {
-		const values = responses[questionKey];
+	return Object.entries(responses).map(([questionKey, values]) => {
 		const all = values.filter(isValid);
 		const lowRep = Array.from(lowRepIndices)
 			.map((i) => values[i])
@@ -59,6 +47,7 @@ export const calculateGroupedSurveyStatsFromColumns = (
 
 		return {
 			questionKey,
+			questionText: decodeQuestion(questionKey),
 			overallMedian: calculateTukeyInterpolatedMedian(all),
 			lowRepMedian: calculateTukeyInterpolatedMedian(lowRep),
 			highRepMedian: calculateTukeyInterpolatedMedian(highRep),
@@ -76,33 +65,20 @@ export const calculateGroupedSurveyStatsFromColumns = (
 export const rankBy = (
 	values: TGroupedSurveyStats[],
 	getValue: (s: TGroupedSurveyStats) => number | null
-): Map<TSurveyQuestionKeys, number> => {
+): Map<string, number> => {
 	const sorted = [...values]
 		.filter((s) => getValue(s) !== null)
-		.sort((a, b) => getValue(b)! - getValue(a)!);
+		.sort((a, b) => {
+			const diff = getValue(b)! - getValue(a)!;
+			if (diff !== 0) return diff;
+			return a.questionKey.localeCompare(b.questionKey);
+		});
 
-	const ranks = new Map<TSurveyQuestionKeys, number>();
+	const ranks = new Map<string, number>();
 
-	let currentRank = 1;
-	let previousValue: number | null = null;
-	let tieCount = 0;
-
-	for (let i = 0; i < sorted.length; i++) {
-		const currentValue = getValue(sorted[i])!;
-
-		if (previousValue !== null) {
-			if (currentValue === previousValue) {
-				tieCount++;
-			} else {
-				currentRank += tieCount + 1;
-				tieCount = 0;
-			}
-		}
-
-		ranks.set(sorted[i].questionKey, currentRank);
-
-		previousValue = currentValue;
-	}
+	sorted.forEach((item, index) => {
+		ranks.set(item.questionKey, index + 1);
+	});
 
 	return ranks;
 };
@@ -127,10 +103,11 @@ export const rankGroupedStats = (
 };
 
 /**
- * Returns boolean is the questionKey provided is a known pulse question
+ * Returns boolean if the questionText provided is a known pulse question
  */
-export const isPulseQuestion = (questionKey: TSurveyQuestionKeys) =>
-	PULSE_QUESTIONS.includes(questionKey);
+export const isPulseQuestion = (
+	questionText: TGroupedSurveyStats["questionText"]
+) => PULSE_QUESTIONS.includes(questionText);
 
 /**
  * Calculates key summary statistics from a list of ranked survey stats.

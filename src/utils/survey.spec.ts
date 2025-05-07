@@ -1,46 +1,17 @@
-import type {
-	TCourse,
-	TGroupedSurveyStats,
-	TRankedSurveyStats,
-} from "@/types/shared";
+import type { TGroupedSurveyStats, TRankedSurveyStats } from "@/types/shared";
 import { describe, expect, it } from "vitest";
 import {
 	calculateSummaryStats,
-	getResponsesForQuestion,
 	isPulseQuestion,
 	rankBy,
 	rankGroupedStats,
 } from "./survey";
 
-const mockResponses: TCourse["responses"] = {
-	question1: [6, 5],
-	question2: [4, 5],
-	question3: [5, 5],
-	question4: [6, 5],
-	question5: [5, 5],
-	question6: [6, 6],
-	question7: [4, 5, 3, 6], // Representation question
-	question8: [5, 5],
-	question9: [5, 5],
-	question10: [6, 5],
-	question11: [6, 5],
-	question12: [5, 5],
-	question13: [6, 5],
-	question14: [5, 5],
-	question15: [5, 5],
-	question16: [5, 5],
-	question17: [5, 5],
-	question18: [5, 5],
-	question19: [5, 5],
-	question20: [5, 5],
-	question21: [5, 5],
-	question22: [5, 5],
-};
-
 describe("rankBy", () => {
 	const mockData: TGroupedSurveyStats[] = [
 		{
 			questionKey: "question1",
+			questionText: "question1",
 			overallMedian: 5,
 			lowRepMedian: 0,
 			highRepMedian: 0,
@@ -50,6 +21,7 @@ describe("rankBy", () => {
 		},
 		{
 			questionKey: "question2",
+			questionText: "question2",
 			overallMedian: 3,
 			lowRepMedian: 0,
 			highRepMedian: 0,
@@ -59,6 +31,7 @@ describe("rankBy", () => {
 		},
 		{
 			questionKey: "question3",
+			questionText: "question3",
 			overallMedian: 5,
 			lowRepMedian: 0,
 			highRepMedian: 0,
@@ -72,7 +45,7 @@ describe("rankBy", () => {
 		const ranks = rankBy(mockData, (s) => s.overallMedian);
 
 		expect(ranks.get("question1")).toBe(1);
-		expect(ranks.get("question3")).toBe(1); // same value, same rank
+		expect(ranks.get("question3")).toBe(2); // tie breaker
 		expect(ranks.get("question2")).toBe(3);
 	});
 });
@@ -81,6 +54,7 @@ describe("rankGroupedStats", () => {
 	const mockData: TGroupedSurveyStats[] = [
 		{
 			questionKey: "question1",
+			questionText: "question1",
 			overallMedian: 5,
 			lowRepMedian: 3,
 			highRepMedian: 6,
@@ -90,6 +64,7 @@ describe("rankGroupedStats", () => {
 		},
 		{
 			questionKey: "question2",
+			questionText: "question2",
 			overallMedian: 3,
 			lowRepMedian: 2,
 			highRepMedian: 4,
@@ -99,6 +74,7 @@ describe("rankGroupedStats", () => {
 		},
 		{
 			questionKey: "question3",
+			questionText: "question3",
 			overallMedian: 5,
 			lowRepMedian: 3,
 			highRepMedian: 6,
@@ -108,7 +84,7 @@ describe("rankGroupedStats", () => {
 		},
 	];
 
-	it("applies correct ranks to grouped stats", () => {
+	it("applies correct ranks to grouped stats with ties", () => {
 		const ranked = rankGroupedStats(mockData);
 
 		const q1 = ranked.find((r) => r.questionKey === "question1")!;
@@ -116,52 +92,24 @@ describe("rankGroupedStats", () => {
 		const q3 = ranked.find((r) => r.questionKey === "question3")!;
 
 		expect(q1.rank).toBe(1);
-		expect(q3.rank).toBe(1);
+		expect(q3.rank).toBe(2);
 		expect(q2.rank).toBe(3);
 
 		expect(q1.lowRepRank).toBe(1);
-		expect(q3.lowRepRank).toBe(1);
+		expect(q3.lowRepRank).toBe(2);
 		expect(q2.lowRepRank).toBe(3);
 
 		expect(q1.highRepRank).toBe(1);
-		expect(q3.highRepRank).toBe(1);
+		expect(q3.highRepRank).toBe(2);
 		expect(q2.highRepRank).toBe(3);
-	});
-});
-
-describe("getResponsesForQuestion", () => {
-	it("should return the correct responses array for a valid question text", () => {
-		const responses = getResponsesForQuestion(mockResponses, "question7");
-
-		expect(responses).toEqual([4, 5, 3, 6]);
-	});
-
-	it("should return an empty array if the question responses are missing", () => {
-		const tempResponses: TCourse["responses"] = {
-			...mockResponses,
-			question7: [],
-		};
-
-		const responses = getResponsesForQuestion(tempResponses, "question7");
-
-		expect(responses).toEqual([]);
-	});
-
-	it("should still work even if the responses field is missing a question key (returns empty)", () => {
-		const tempResponses: TCourse["responses"] = {
-			...mockResponses,
-			question7: [],
-		};
-
-		const responses = getResponsesForQuestion(tempResponses, "question7");
-
-		expect(responses).toEqual([]);
 	});
 });
 
 describe("isPulseQuestion", () => {
 	it("should return true when the question is a known pulse question", () => {
-		const result = isPulseQuestion("question7");
+		const result = isPulseQuestion(
+			"Students like me are REPRESENTED in my engineering major/minor."
+		);
 
 		expect(result).toEqual(true);
 	});
@@ -177,6 +125,7 @@ describe("calculateSummaryStats", () => {
 	const mockStats: TRankedSurveyStats[] = [
 		{
 			questionKey: "question1",
+			questionText: "question1",
 			overallMedian: 5,
 			lowRepMedian: 4,
 			highRepMedian: 6,
@@ -189,6 +138,7 @@ describe("calculateSummaryStats", () => {
 		},
 		{
 			questionKey: "question2",
+			questionText: "question2",
 			overallMedian: 5,
 			lowRepMedian: 5,
 			highRepMedian: 5,
@@ -201,6 +151,7 @@ describe("calculateSummaryStats", () => {
 		},
 		{
 			questionKey: "question3",
+			questionText: "question2",
 			overallMedian: 5,
 			lowRepMedian: 6,
 			highRepMedian: 5,

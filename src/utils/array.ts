@@ -1,14 +1,10 @@
+import { REQUIRED_HEADERS_MAP } from "@/constants/surveyResponse";
 import type {
 	TCourse,
-	TSurveyQuestionKeys,
 	TSurveyResponse,
-	TSurveyResponseQuestions,
+	TSurveyResponseCourse,
+	TUnsanitizedCourse,
 } from "@/types/shared";
-import { surveyResponseQuestionsValidator } from "@/validators/surveyResponseValidator";
-
-export const surveyQuestionKeys = Object.keys(
-	surveyResponseQuestionsValidator.shape
-) as (keyof TSurveyResponseQuestions)[];
 
 /**
  * Parses a set of survey responses for a single course,
@@ -16,13 +12,22 @@ export const surveyQuestionKeys = Object.keys(
  */
 export const aggregateResponses = (
 	surveyResponses: TSurveyResponse[]
-): Record<TSurveyQuestionKeys, number[]> => {
-	const result = {} as Record<TSurveyQuestionKeys, number[]>;
+): Record<string, unknown[]> => {
+	const result: Record<string, unknown[]> = {};
 
-	for (const key of surveyQuestionKeys) {
-		result[key] = surveyResponses
-			.map((row) => row[key])
-			.filter((val): val is number => typeof val === "number");
+	for (const response of surveyResponses) {
+		for (const [key, val] of Object.entries(response)) {
+			// Skip known metadata fields
+			if (
+				Object.values(REQUIRED_HEADERS_MAP).includes(
+					key as keyof TSurveyResponseCourse
+				)
+			)
+				continue;
+
+			if (!result[key]) result[key] = [];
+			result[key].push(val);
+		}
 	}
 
 	return result;
@@ -34,7 +39,7 @@ export const aggregateResponses = (
  */
 export const groupCoursesWithSurveyResponses = (
 	surveyResponses: TSurveyResponse[]
-): TCourse[] => {
+): TUnsanitizedCourse[] => {
 	const surveyResponesMap = new Map<string, TSurveyResponse[]>();
 
 	surveyResponses.forEach((surveyResponse) => {
@@ -45,7 +50,7 @@ export const groupCoursesWithSurveyResponses = (
 		surveyResponesMap.get(key)!.push(surveyResponse);
 	});
 
-	const courses: TCourse[] = [];
+	const courses: TUnsanitizedCourse[] = [];
 
 	for (const surveyResponse of surveyResponesMap.values()) {
 		const [header] = surveyResponse;
@@ -65,4 +70,51 @@ export const groupCoursesWithSurveyResponses = (
 	}
 
 	return courses;
+};
+
+/**
+ * Cleans up raw course responses:
+ * - Converts strings and "-1" to numbers
+ * - Turns blank or invalid values into 0
+ * - Skips questions with answers like "yes", "no", "good", or "bad"
+ */
+export const sanitizeCourses = (
+	dirtyCourses: TUnsanitizedCourse[]
+): TCourse[] => {
+	return dirtyCourses.map((course) => {
+		const cleanedResponses: TCourse["responses"] = {};
+
+		for (const [questionKey, values] of Object.entries(course.responses)) {
+			const responsesArray = Array.isArray(values) ? values : [];
+
+			const hasDisqualifyingValue = responsesArray.some(
+				(val) =>
+					typeof val === "string" && /^(good|bad|yes|no)$/i.test(val.trim())
+			);
+
+			if (hasDisqualifyingValue) continue;
+
+			cleanedResponses[questionKey] = responsesArray.map((val) => {
+				if (
+					val === null ||
+					val === undefined ||
+					val === "" ||
+					val === -1 ||
+					val === "-1"
+				) {
+					return 0;
+				}
+
+				if (typeof val === "number") return val;
+				if (typeof val === "string" && !isNaN(Number(val))) return Number(val);
+
+				return 0;
+			});
+		}
+
+		return {
+			...course,
+			responses: cleanedResponses,
+		};
+	});
 };

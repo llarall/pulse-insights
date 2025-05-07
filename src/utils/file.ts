@@ -1,57 +1,48 @@
-import { SURVEY_QUESTIONS_MAP } from "@/constants/surveyQuestions";
-import type { TRow, TSurveyResponse } from "@/types/shared";
+import { REQUIRED_HEADERS_MAP } from "@/constants/surveyResponse";
+import type {
+	TRow,
+	TSurveyResponse,
+	TUnsanitizedSurveyResponse,
+} from "@/types/shared";
 import { surveyResponseValidator } from "@/validators/surveyResponseValidator";
 import { read, utils } from "xlsx";
-
-/**
- * Normalizes a header string into camelCase format for internal usage.
- * Removes punctuation, converts to lowercase, and formats spacing.
- */
-export const normalizeHeader = (header: string): string => {
-	return header
-		.toLowerCase()
-		.replace(/["'.()]/g, "")
-		.replace(/[^a-z0-9]+(.)/g, (_, chr) => chr.toUpperCase())
-		.replace(/^[^a-zA-Z]+/, "")
-		.replace("#", "");
-};
+import { encodeQuestion } from "./encoding";
 
 /**
  * Parses sheet rows from a spreadsheet into validated survey responses.
- * Filters out empty rows and normalizes headers before validation.
  */
 export const parseSheetRowsToResponses = (rows: TRow[]): TSurveyResponse[] => {
 	if (rows.length === 0) return [];
 
 	const [headerRow, ...dataRows] = rows;
 
-	const validDataRows = dataRows.filter(
-		(row) =>
-			Array.isArray(row) && row.some((cell) => cell !== null && cell !== "")
+	const requiredHeadersKeys = Object.keys(REQUIRED_HEADERS_MAP);
+	const hasAllRequiredHeaders = requiredHeadersKeys.every((required) =>
+		headerRow.includes(required)
 	);
 
-	return validDataRows.map((dataRow) => {
-		const obj: Record<string, unknown> = {};
+	if (!hasAllRequiredHeaders) return [];
+
+	return dataRows.map((dataRow) => {
+		const obj: TUnsanitizedSurveyResponse = {};
 
 		dataRow.forEach((value, index) => {
 			const rawHeader = headerRow[index];
 
-			const internalKey = Object.entries(SURVEY_QUESTIONS_MAP).find(
-				([, text]) => text === rawHeader
-			)?.[0];
-
-			const mappedKey = internalKey ?? normalizeHeader(rawHeader);
+			const requiredHeader = REQUIRED_HEADERS_MAP[rawHeader];
+			const encodedQuestion = encodeQuestion(rawHeader);
+			const mappedKey = requiredHeader ?? encodedQuestion;
 
 			obj[mappedKey] = value;
 		});
 
-		return surveyResponseValidator.parse(obj);
+		return surveyResponseValidator.parse(obj) as TSurveyResponse;
 	});
 };
 
 /**
  * Parses survey responses from an uploaded file.
- * Reads all sheets, extracts rows, and returns cleaned, validated responses.
+ * Reads all sheets, extracts rows, and returns responses
  */
 export const parseSurveyResponsesFromFile = async (
 	file: File
