@@ -1,4 +1,4 @@
-import type { TSurveyQuestionKeys } from "@/types/shared";
+import type { TCourse } from "@/types/shared";
 import {
 	calculateGroupedSurveyStatsFromColumns,
 	rankGroupedStats,
@@ -8,9 +8,7 @@ import { useMemo } from "react";
 /**
  * Hook that calculates and ranks survey stats from course responses.
  */
-export const useSurveyStats = (
-	responses?: Record<TSurveyQuestionKeys, number[]>
-) => {
+export const useSurveyStats = (responses?: TCourse["responses"]) => {
 	const stats = useMemo(() => {
 		if (!responses) return [];
 		return calculateGroupedSurveyStatsFromColumns(responses);
