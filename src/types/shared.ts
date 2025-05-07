@@ -1,49 +1,56 @@
-import {
-	surveyResponseCourseValidator,
-	surveyResponseQuestionsValidator,
-	surveyResponseValidator,
-} from "@/validators/surveyResponseValidator";
+import { surveyResponseCourseValidator } from "@/validators/surveyResponseValidator";
 import { z } from "zod";
 
 export type TCell = string;
 export type TRow = TCell[];
-export type TSurveyResponseQuestions = z.infer<
-	typeof surveyResponseQuestionsValidator
->;
-export type TSurveyQuestionKeys = keyof TSurveyResponseQuestions;
-export type TCourse = TSurveyResponseCourse & {
-	responses: Record<TSurveyQuestionKeys, number[]>;
+
+export type TUnsanitizedSurveyResponse = Record<string, unknown>;
+
+export type TUnsanitizedCourse = TSurveyResponseCourse & {
+	responses: TUnsanitizedSurveyResponse;
 };
+
+export type TCourse = TSurveyResponseCourse & {
+	responses: Record<string, number[]>;
+};
+
 export type TSurveyResponseCourse = z.infer<
 	typeof surveyResponseCourseValidator
 >;
-export type TSurveyResponse = z.infer<typeof surveyResponseValidator>;
+
+export type TSurveyResponse = TSurveyResponseCourse & {
+	[encodedQuestionId: string]: string | number | undefined;
+};
+
 export type TGroupedSurveyStats = {
-	questionKey: TSurveyQuestionKeys;
+	questionKey: string;
 	overallMedian: number;
 	lowRepMedian: number;
 	highRepMedian: number;
 	n: number;
 	lowRepN: number;
+	questionText: string;
 	highRepN: number;
 };
+
 export type TRankedSurveyStats = TGroupedSurveyStats & {
 	rank: number;
 	lowRepRank: number;
 	highRepRank: number;
 };
+
 export type TSurveySummary = {
 	lowRepLessFavorablePct: number;
 	highRepLessFavorablePct: number;
 	sameResponsePct: number;
 	topMedianDifferences: {
-		questionKey: TSurveyQuestionKeys;
+		questionKey: string;
 		difference: number;
 		lowRepMedian: number;
 		highRepMedian: number;
 	}[];
 	topRankDifferences: {
-		questionKey: TSurveyQuestionKeys;
+		questionKey: string;
 		rankDifference: number;
 		lowRepRank: number;
 		highRepRank: number;
