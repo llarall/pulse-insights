@@ -100,32 +100,41 @@ describe("sanitizeCourses", () => {
 });
 
 describe("groupCoursesWithSurveyResponses", () => {
-	it("should group responses by course fields and aggregate answers", () => {
+	it("groups survey responses into one course and aggregates answers", () => {
 		const courses = groupCoursesWithSurveyResponses(mockSurveyResponses);
-		expect(courses.length).toBe(1); // same instructor/course
 
+		expect(courses).toHaveLength(1);
 		const course = courses[0];
-		expect(course.courseName).toBe("SOFTWARE ENGINEERING I");
-		expect(course.responses.question1).toEqual([6, 4]);
-		expect(course.responses.question22).toEqual([6, 4]);
+
+		expect(course.courseName).toBe("Intro to Engineering");
+
+		const q1 = encodeQuestion(
+			"My instructor modeled and promoted inclusivity."
+		);
+		const q2 = encodeQuestion(
+			"If you read this question then select mostly disagree."
+		);
+
+		expect(course.responses[q1]).toEqual([6, 4]);
+		expect(course.responses[q2]).toEqual([5, 4]);
 	});
 
-	it("should group multiple distinct courses separately", () => {
-		const newCourseResponse: TSurveyResponse = {
+	it("creates separate courses when grouping fields differ", () => {
+		const differentCourse: TSurveyResponse = {
 			...mockSurveyResponses[0],
-			number: "362", // different number
-			courseId: "32004",
-			courseName: "SOFTWARE ENGINEERING II",
+			number: "102", // only change
+			courseId: "ENGR102",
+			courseName: "Engineering Design",
 		};
 
-		const multiCourses = groupCoursesWithSurveyResponses([
+		const grouped = groupCoursesWithSurveyResponses([
 			...mockSurveyResponses,
-			newCourseResponse,
+			differentCourse,
 		]);
 
-		expect(multiCourses.length).toBe(2);
-		const names = multiCourses.map((c) => c.courseName);
-		expect(names).toContain("SOFTWARE ENGINEERING I");
-		expect(names).toContain("SOFTWARE ENGINEERING II");
+		expect(grouped).toHaveLength(2);
+		const names = grouped.map((c) => c.courseName);
+		expect(names).toContain("Intro to Engineering");
+		expect(names).toContain("Engineering Design");
 	});
 });
