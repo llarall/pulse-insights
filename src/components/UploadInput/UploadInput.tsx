@@ -1,5 +1,8 @@
 import { courseAtom } from "@/atoms/courseAtom";
-import { groupCoursesWithSurveyResponses } from "@/utils/array";
+import {
+	groupCoursesWithSurveyResponses,
+	sanitizeCourses,
+} from "@/utils/array";
 import { parseSurveyResponsesFromFile } from "@/utils/file";
 import { useSetAtom } from "jotai";
 import { useRef, useState } from "react";
@@ -28,9 +31,11 @@ export const UploadInput = () => {
 	const uploadFile = async (file: File) => {
 		try {
 			const surveyResponses = await parseSurveyResponsesFromFile(file);
-			const groupedCourses = groupCoursesWithSurveyResponses(surveyResponses);
+			const unsanitizedGroupCourses =
+				groupCoursesWithSurveyResponses(surveyResponses);
+			const groupedCourses = sanitizeCourses(unsanitizedGroupCourses);
 
-			// Only supporting one right now
+			// // Only supporting one right now
 			if (groupedCourses.length > 0) {
 				setError("There is more than one course in your files.");
 				setCourse(groupedCourses[0]);
@@ -60,8 +65,10 @@ export const UploadInput = () => {
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
+
 		if (file) {
 			uploadFile(file);
+			e.target.value = "";
 		}
 	};
 
