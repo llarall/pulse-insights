@@ -16,22 +16,30 @@ https://web.engr.oregonstate.edu/~letawl/pulse/
 
 ## 📦 Installation
 
-Ensure you're using the specified node version by installing [nvm](https://github.com/nvm-sh/nvm) and then run
+**Ensure you're using the specified node version by installing [nvm](https://github.com/nvm-sh/nvm) and then run** (or do a manual check)
 
 ```
 nvm use
 ```
 
-Install packages
+**Install packages**
 
 ```bash
 yarn install
+```
+or
+```bash
+npm install
 ```
 
 ## 🛠 Development
 
 ```bash
 yarn dev
+```
+or
+```bash
+npm run dev
 ```
 
 Runs the app locally at http://localhost:5173.
@@ -41,6 +49,10 @@ Runs the app locally at http://localhost:5173.
 ```bash
 yarn build
 ```
+or
+```bash
+npm run build
+```
 
 Outputs static files to the /dist folder.
 
@@ -48,6 +60,10 @@ Outputs static files to the /dist folder.
 
 ```bash
 yarn test
+```
+or
+```bash
+npm run test
 ```
 
 Tests are powered by [Vitest](https://vitest.dev/).
