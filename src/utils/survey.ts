@@ -7,6 +7,7 @@ import type {
 import {
 	PULSE_QUESTIONS,
 	REP_QUESTION_KEY,
+	QUESTIONS_TO_IGNORE,
 } from "../constants/surveyQuestions";
 import { decodeQuestion } from "./encoding";
 import { calculateTukeyInterpolatedMedian } from "./math";
@@ -108,6 +109,13 @@ export const rankGroupedStats = (
 export const isPulseQuestion = (
 	questionText: TGroupedSurveyStats["questionText"]
 ) => PULSE_QUESTIONS.includes(questionText);
+
+/**
+ * Returns boolean if the question should not be displayed on the results table
+ */
+export const isIgnorableQuestion = (
+	questionText: TGroupedSurveyStats["questionText"]
+) => QUESTIONS_TO_IGNORE.includes(questionText);
 
 /**
  * Calculates key summary statistics from a list of ranked survey stats.
