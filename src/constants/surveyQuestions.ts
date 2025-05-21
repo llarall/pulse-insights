@@ -8,6 +8,11 @@ export const PULSE_QUESTIONS = [
 	"Because of this course, I feel more SATISFIED with my engineering major/minor.",
 ];
 
+export const QUESTIONS_TO_IGNORE = [
+	"Please comment on how the course could better support your learning.",
+	"Please comment on how the course positively supported your learning.",
+];
+
 export const REP_QUESTION_TEXT =
 	"Students like me are REPRESENTED in my engineering major/minor.";
 
