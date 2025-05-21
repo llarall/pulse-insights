@@ -66,7 +66,7 @@ export const InfoSection = () => {
 					</p>
 
 					<h3>Credits</h3>
-					<p>Created by Claude (Anthropic) and Lara Letaw</p>
+					<p>Created by Dannon Gilbert, Lara Letaw, and Pam Van Londen. First version created by Claude (Anthropic) and Lara Letaw.</p>
 				</div>
 			)}
 		</Card>

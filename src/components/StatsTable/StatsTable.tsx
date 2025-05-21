@@ -13,14 +13,14 @@ const TABLE_HEADERS: Record<
 > = {
 	questionText: { label: "Question", sortable: true },
 	overallMedian: { label: "Median", sortable: true },
-	lowRepMedian: { label: "Low Rep Median", sortable: true },
-	highRepMedian: { label: "High Rep Median", sortable: true },
+	lowRepMedian: { label: "LowRep Median", sortable: true },
+	highRepMedian: { label: "HighRep Median", sortable: true },
 	n: { label: "n", sortable: true },
-	lowRepN: { label: "Low Rep n", sortable: true },
-	highRepN: { label: "High Rep n", sortable: true },
+	lowRepN: { label: "LowRep n", sortable: true },
+	highRepN: { label: "HighRep n", sortable: true },
 	rank: { label: "Rank", sortable: true },
-	lowRepRank: { label: "Low Rep Rank", sortable: true },
-	highRepRank: { label: "High Rep Rank", sortable: true },
+	lowRepRank: { label: "LowRep Rank", sortable: true },
+	highRepRank: { label: "HighRep Rank", sortable: true },
 };
 
 /**
