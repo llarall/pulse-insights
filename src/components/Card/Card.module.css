@@ -1,0 +1,14 @@
+.card {
+	margin: 20px 0;
+	padding: 20px;
+	border: 1px solid #dee2e6;
+	border-radius: 4px;
+}
+
+.centered {
+	text-align: center;
+}
+
+.gray {
+	background: #f8f9fa;
+}

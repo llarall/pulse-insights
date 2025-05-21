@@ -1,0 +1,17 @@
+.dropArea {
+	padding: 20px;
+	border: 2px dashed #ccc;
+	border-radius: 6px;
+	text-align: center;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.dragOver {
+	background-color: #e1f5fe;
+	border-color: #2196f3;
+}
+
+.input {
+	display: none;
+}
