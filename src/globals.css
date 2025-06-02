@@ -35,32 +35,83 @@
 	--offWhite: #f7f5f5;
 	--bucktoothWhite: #fff;
 
-	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-	line-height: 1.5;
-	font-weight: 400;
+	/* Default UI elements */
+	--font-body: system-ui, Avenir, Helvetica, Arial, sans-serif;
+	--line-height-base: 1.5;
+	--font-weight-base: 400;
+
+	--border-radius: 0.5rem;
+	--box-shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.1);
+	--transition-fast: 0.2s ease-in-out;
+}
+
+/* Light Theme */
+.theme-light {
+	--color-bg: var(--bucktoothWhite);
+	--color-text: var(--paddletailBlack);
+
+	--bg-contrast: #f0f0f0;
+	--bg-contrast-hover: #e0e0e0;
+	--btn-text: #111;
+
+	--table-bg: var(--bucktoothWhite);
+	--table-border: #d1d5db;
+	--table-header-bg: #f3f4f6;
+	--table-text: var(--paddletailBlack);
+	--table-hover: #e2e2e2;
+	--table-hover-accent: #fba6a6;
+}
+
+/* Dark Theme */
+.theme-dark {
+	--color-bg: #121212;
+	--color-text: var(--bucktoothWhite);
+
+	--bg-contrast: #2a2a2a;
+	--bg-contrast-hover: #3a3a3a;
+	--btn-text: #f1f1f1;
+
+	--table-bg: #1e1e1e;
+	--table-border: #444;
+	--table-header-bg: #2a2a2a;
+	--table-text: #f1f1f1;
+	--table-hover: #313131;
+	--table-hover-accent: #914141;
+}
+
+/* Base Styling */
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	font-family: var(--font-body);
+	line-height: var(--line-height-base);
+	font-weight: var(--font-weight-base);
+	color: var(--color-text);
+	background-color: var(--color-bg);
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
 
+@media (max-width: 1200px) {
+	body {
+		padding: 2rem;
+	}
+}
+
 #root {
-	justify-content: center;
 	display: flex;
+	justify-content: center;
 }
 
-main {
-	max-width: 1200px;
-}
-
-.error {
-	color: #e42222;
-}
-
+/* Elements */
 a {
 	font-weight: 500;
 	color: #646cff;
-	text-decoration: inherit;
+	text-decoration: none;
 }
 
 a:hover {
@@ -70,4 +121,31 @@ a:hover {
 h1 {
 	font-size: 3.2em;
 	line-height: 1.1;
+}
+
+.error {
+	color: #e42222;
+}
+
+button {
+	padding: 0.6rem 1.2rem;
+	font-size: 1rem;
+	font-weight: 500;
+	border: none;
+	border-radius: var(--border-radius);
+	cursor: pointer;
+	transition: background-color var(--transition-fast),
+		color var(--transition-fast);
+	background-color: var(--bg-contrast);
+	color: var(--btn-text);
+	box-shadow: var(--box-shadow-sm);
+}
+
+button:hover {
+	background-color: var(--bg-contrast-hover);
+}
+
+button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
 }

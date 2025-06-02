@@ -3,18 +3,21 @@
 	margin-top: 1rem;
 
 	table {
-		width: 100%;
+		background-color: var(--table-bg);
+		color: var(--table-text);
 		border-collapse: collapse;
 		font-size: 0.875rem;
+		word-wrap: break-word;
+		width: 100%;
 
 		thead {
-			background-color: #f3f4f6;
+			background-color: var(--table-header-bg);
 			font-weight: 600;
 		}
 
 		th,
 		td {
-			border: 1px solid #d1d5db;
+			border: 1px solid var(--table-border);
 			padding: 0.5rem;
 			text-align: center;
 			vertical-align: middle;
@@ -25,14 +28,13 @@
 .clickableRow {
 	cursor: pointer;
 	border-left: 3px solid var(--beaverOrange);
-	background-color: var(--offWhite);
 	transition: background-color 0.2s ease;
 
 	&:hover {
-		background-color: rgb(204, 203, 203);
+		background-color: var(--table-hover);
 
 		.lowValue {
-			background-color: #fba6a6;
+			background-color: var(--table-hover-accent);
 		}
 	}
 }

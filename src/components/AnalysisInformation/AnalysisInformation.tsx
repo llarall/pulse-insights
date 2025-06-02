@@ -41,7 +41,7 @@ export const AnalysisInformation = () => {
 	});
 
 	return (
-		<Card gray>
+		<Card>
 			<h2>Analysis</h2>
 			<p>
 				<em>Notes:</em> <strong>"LowRep"</strong> refers to less represented
