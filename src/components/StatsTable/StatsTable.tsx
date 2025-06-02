@@ -1,10 +1,13 @@
 import { courseAtom } from "@/atoms/courseAtom";
+import { statsModalAtom } from "@/atoms/statsModalAtom";
 import { useSurveyStats } from "@/hooks/useSurveyStats";
 import type { TRankedSurveyStats } from "@/types/shared";
 import { isPulseQuestion } from "@/utils/survey";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useMemo, useState } from "react";
 import { Card } from "../Card/Card";
+import { StatsModal } from "../StatsModal/StatsModal";
+import { MedianCell } from "./MedianCell";
 import styles from "./StatsTable.module.css";
 
 const TABLE_HEADERS: Record<
@@ -28,6 +31,7 @@ const TABLE_HEADERS: Record<
  */
 export const StatsTable = () => {
 	const course = useAtomValue(courseAtom);
+	const setStatsModalAtomValue = useSetAtom(statsModalAtom);
 
 	const { rankedStats } = useSurveyStats(course?.responses);
 
@@ -79,6 +83,20 @@ export const StatsTable = () => {
 		return null;
 	};
 
+	const handleLowStatClick = (stats: TRankedSurveyStats) => {
+		setStatsModalAtomValue({
+			isOpen: true,
+			stats: stats,
+		});
+	};
+
+	const handleKeyDown = (e: React.KeyboardEvent, stat: TRankedSurveyStats) => {
+		if (e.key === "Enter" || e.key === " ") {
+			e.preventDefault();
+			handleLowStatClick(stat);
+		}
+	};
+
 	if (!course || sortedStats.length === 0) return null;
 
 	const tableHeaderKeys = Object.keys(TABLE_HEADERS) as Array<
@@ -106,9 +124,10 @@ export const StatsTable = () => {
 							))}
 						</tr>
 					</thead>
+
 					<tbody>
-						{sortedStats.map(
-							({
+						{sortedStats.map((stat) => {
+							const {
 								questionKey,
 								lowRepMedian,
 								lowRepN,
@@ -120,36 +139,40 @@ export const StatsTable = () => {
 								n,
 								rank,
 								overallMedian,
-							}) => (
-								<tr key={questionKey}>
+							} = stat;
+
+							const containsLowMedian =
+								overallMedian <= 5 || lowRepMedian <= 5 || highRepMedian <= 5;
+
+							return (
+								<tr
+									key={questionKey}
+									className={containsLowMedian ? styles.clickableRow : ""}
+									onClick={
+										containsLowMedian
+											? () => handleLowStatClick(stat)
+											: undefined
+									}
+									onKeyDown={
+										containsLowMedian
+											? (e) => handleKeyDown(e, stat)
+											: undefined
+									}
+									role={containsLowMedian ? "button" : undefined}
+									tabIndex={containsLowMedian ? 0 : undefined}
+								>
 									<td className={styles.questionCol}>
 										{isPulseQuestion(questionText) && "🧡 "}
 
 										{questionText}
 									</td>
-									<td
-										className={
-											overallMedian && overallMedian <= 5 ? styles.lowValue : ""
-										}
-									>
-										{overallMedian?.toFixed(2) ?? "—"}
-									</td>
 
-									<td
-										className={
-											lowRepMedian && lowRepMedian <= 5 ? styles.lowValue : ""
-										}
-									>
-										{lowRepMedian?.toFixed(2) ?? "—"}
-									</td>
+									<MedianCell value={overallMedian} />
 
-									<td
-										className={
-											highRepMedian && highRepMedian <= 5 ? styles.lowValue : ""
-										}
-									>
-										{highRepMedian?.toFixed(2) ?? "—"}
-									</td>
+									<MedianCell value={lowRepMedian} />
+
+									<MedianCell value={highRepMedian} />
+
 									<td>{n}</td>
 									<td>{lowRepN}</td>
 									<td>{highRepN}</td>
@@ -157,10 +180,12 @@ export const StatsTable = () => {
 									<td>{lowRepRank}</td>
 									<td>{highRepRank}</td>
 								</tr>
-							)
-						)}
+							);
+						})}
 					</tbody>
 				</table>
+
+				<StatsModal />
 			</div>
 		</Card>
 	);

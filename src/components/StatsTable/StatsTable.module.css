@@ -19,15 +19,22 @@
 			text-align: center;
 			vertical-align: middle;
 		}
-
-		tr:nth-child(even) {
-			background-color: #fafafa;
-		}
 	}
 }
 
-.lowValue {
-	background-color: #fde2e2;
+.clickableRow {
+	cursor: pointer;
+	border-left: 3px solid var(--beaverOrange);
+	background-color: var(--offWhite);
+	transition: background-color 0.2s ease;
+
+	&:hover {
+		background-color: rgb(204, 203, 203);
+
+		.lowValue {
+			background-color: #fba6a6;
+		}
+	}
 }
 
 .questionCol {
