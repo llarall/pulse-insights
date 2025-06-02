@@ -1,4 +1,4 @@
-import { REQUIRED_HEADERS_MAP } from "@/constants/surveyResponse";
+import { REQUIRED_HEADERS_MAP } from "@/constants/surveyQuestions";
 import type {
 	TCourse,
 	TSurveyResponse,

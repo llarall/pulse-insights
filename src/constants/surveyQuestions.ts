@@ -1,4 +1,19 @@
+import type { TSurveyResponseCourse } from "@/types/shared";
 import { encodeQuestion } from "@/utils/encoding";
+
+export const REQUIRED_HEADERS_MAP: Record<string, keyof TSurveyResponseCourse> =
+	{
+		"RESPONSE #": "response",
+		Term: "term",
+		"Instructor ID": "instructorId",
+		"First Name": "firstName",
+		"Last Name": "lastName",
+		Subject: "subject",
+		Number: "number",
+		Section: "section",
+		"Course ID": "courseId",
+		"Course Name": "courseName",
+	};
 
 export const PULSE_QUESTIONS = [
 	"Students like me are REPRESENTED in my engineering major/minor.",
