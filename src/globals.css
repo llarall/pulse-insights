@@ -1,0 +1,73 @@
+:root {
+	/* https://communications.oregonstate.edu/brand-guide/visual-identity/colors */
+
+	/* oranges, yellows,  */
+	--beaverOrange: #d73f09;
+	--solarFlare: #d3832b;
+	--luminance: #ffb500;
+	--candela: #fdd26e;
+
+	/* blues */
+	--stratosphere: #006a8e;
+	--starCanvas: #003b5c;
+	--moondust: #c6dae7;
+
+	/* blue-greens */
+	--rogueWave: #0d5257;
+	--highTide: #00859b;
+	--seafoam: #b8dde1;
+
+	/* greens */
+	--pineStand: #4a773c;
+	--reindeerMoss: #c4d6a4;
+	--reindeerMossBright: #659f01;
+	--hopBine: #aa9d2e;
+
+	/* Grayscale and earth*/
+	--paddletailBlack: #000;
+	--darkBg: #212529;
+	--text: #423e3c;
+	--highDesert: #7a6855;
+	--coastline: #a7aca2;
+	--crater: #8e9089;
+	--till: #b7a99a;
+	--navBg: #e9e5e4;
+	--offWhite: #f7f5f5;
+	--bucktoothWhite: #fff;
+
+	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+	justify-content: center;
+	display: flex;
+}
+
+main {
+	max-width: 1200px;
+}
+
+.error {
+	color: #e42222;
+}
+
+a {
+	font-weight: 500;
+	color: #646cff;
+	text-decoration: inherit;
+}
+
+a:hover {
+	color: #535bf2;
+}
+
+h1 {
+	font-size: 3.2em;
+	line-height: 1.1;
+}
