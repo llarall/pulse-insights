@@ -1,0 +1,8 @@
+.lowValue {
+	background-color: #fde2e2;
+	transition: background-color 0.2s ease;
+}
+
+.lowValue:hover {
+	background-color: #f8c8c8;
+}
