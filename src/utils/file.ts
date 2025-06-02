@@ -47,6 +47,8 @@ export const parseSurveyResponsesFromFile = async (
 	file: File
 ): Promise<TSurveyResponse[]> => {
 	const arrayBuffer = await file.arrayBuffer();
+
+	// clear question key map
 	resetQuestionMap();
 
 	const workbook = read(arrayBuffer, {
