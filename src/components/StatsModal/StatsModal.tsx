@@ -1,5 +1,5 @@
 import { statsModalAtom } from "@/atoms/statsModalAtom";
-import { decodeQuestion } from "@/utils/encoding";
+import { getQuestionTextByKey } from "@/utils/questionKeyMap";
 import { useAtom } from "jotai";
 import { RESET } from "jotai/utils";
 import { Modal } from "../Modal/Modal";
@@ -10,7 +10,7 @@ export const StatsModal = () => {
 	const { isOpen, stats } = responseModalValue || {};
 	const { questionKey = "" } = stats || {};
 
-	const question = decodeQuestion(questionKey);
+	const questionText = getQuestionTextByKey(questionKey);
 
 	const onClose = () => {
 		setResponseModalValue(RESET);
@@ -23,7 +23,7 @@ export const StatsModal = () => {
 			title="Understanding Your Response"
 		>
 			<p>
-				For the response <strong>{question}</strong>
+				For the response <strong>{questionText}</strong>
 			</p>
 			<button onClick={onClose}>Close</button>
 		</Modal>

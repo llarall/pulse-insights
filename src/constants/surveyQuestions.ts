@@ -1,5 +1,4 @@
 import type { TSurveyResponseCourse } from "@/types/shared";
-import { encodeQuestion } from "@/utils/encoding";
 
 export const REQUIRED_HEADERS_MAP: Record<string, keyof TSurveyResponseCourse> =
 	{
@@ -30,5 +29,3 @@ export const QUESTIONS_TO_IGNORE = [
 
 export const REP_QUESTION_TEXT =
 	"Students like me are REPRESENTED in my engineering major/minor.";
-
-export const REP_QUESTION_KEY = encodeQuestion(REP_QUESTION_TEXT);

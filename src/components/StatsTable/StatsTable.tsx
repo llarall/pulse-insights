@@ -2,6 +2,7 @@ import { courseAtom } from "@/atoms/courseAtom";
 import { statsModalAtom } from "@/atoms/statsModalAtom";
 import { useSurveyStats } from "@/hooks/useSurveyStats";
 import type { TRankedSurveyStats } from "@/types/shared";
+import { getQuestionTextByKey } from "@/utils/questionKeyMap";
 import { isPulseQuestion } from "@/utils/survey";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useMemo, useState } from "react";
@@ -11,10 +12,10 @@ import { MedianCell } from "./MedianCell";
 import styles from "./StatsTable.module.css";
 
 const TABLE_HEADERS: Record<
-	keyof Omit<TRankedSurveyStats, "questionKey">,
+	keyof TRankedSurveyStats,
 	{ label: string; sortable: boolean }
 > = {
-	questionText: { label: "Question", sortable: true },
+	questionKey: { label: "Question", sortable: true },
 	overallMedian: { label: "Median", sortable: true },
 	lowRepMedian: { label: "LowRep Median", sortable: true },
 	highRepMedian: { label: "HighRep Median", sortable: true },
@@ -47,12 +48,16 @@ export const StatsTable = () => {
 			const aValue = a[sortKey];
 			const bValue = b[sortKey];
 
-			if (sortKey === "questionText") {
+			if (sortKey === "questionKey") {
 				const aStr = typeof aValue === "string" ? aValue : "";
 				const bStr = typeof bValue === "string" ? bValue : "";
+
+				const aQuestion = getQuestionTextByKey(aStr);
+				const bQuestion = getQuestionTextByKey(bStr);
+
 				return sortDirection === "asc"
-					? aStr.localeCompare(bStr)
-					: bStr.localeCompare(aStr);
+					? aQuestion.localeCompare(bQuestion)
+					: bQuestion.localeCompare(aQuestion);
 			}
 
 			const aNum = typeof aValue === "number" ? aValue : -Infinity;
@@ -135,11 +140,12 @@ export const StatsTable = () => {
 								highRepMedian,
 								highRepN,
 								highRepRank,
-								questionText,
 								n,
 								rank,
 								overallMedian,
 							} = stat;
+
+							const questionText = getQuestionTextByKey(questionKey);
 
 							const containsLowMedian =
 								overallMedian <= 5 || lowRepMedian <= 5 || highRepMedian <= 5;
