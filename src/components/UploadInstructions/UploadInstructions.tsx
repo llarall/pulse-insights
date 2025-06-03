@@ -24,9 +24,13 @@ export const UploadInstructions = () => {
 			<h2>Step 1:</h2>
 			<p>
 				Export your SLE data as an Excel file.{" "}
-				<a href="#" onClick={toggleInstructions}>
+				<button
+					className="linkButton"
+					type="button"
+					onClick={toggleInstructions}
+				>
 					Show Instructions
-				</a>
+				</button>
 			</p>
 			{showInstruction && (
 				<div>

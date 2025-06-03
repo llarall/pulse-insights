@@ -1,10 +1,10 @@
 import { courseAtom } from "@/atoms/courseAtom";
 import { LINKS } from "@/constants/links";
 import { useSurveyStats } from "@/hooks/useSurveyStats";
-import { decodeQuestion } from "@/utils/encoding";
+import { getQuestionTextByKey } from "@/utils/questionKeyMap";
 import { calculateSummaryStats } from "@/utils/survey";
 import { useAtomValue } from "jotai";
-import { Card } from "../Card/Card";
+import { Card } from "./Card/Card";
 
 /**
  * Displays the in-depth analysis on the response numbers
@@ -21,8 +21,8 @@ export const AnalysisInformation = () => {
 	const topMedianQuestions = summary.topMedianDifferences.map((item) => {
 		return (
 			<li key={item.questionKey}>
-				<strong>{decodeQuestion(item.questionKey)}</strong> with a difference of{" "}
-				<strong>{item.difference.toFixed(2)}</strong> (LowRep:{" "}
+				<strong>{getQuestionTextByKey(item.questionKey)}</strong> with a
+				difference of <strong>{item.difference.toFixed(2)}</strong> (LowRep:{" "}
 				<strong>{item.lowRepMedian.toFixed(2)}</strong>, HighRep:{" "}
 				<strong>{item.highRepMedian.toFixed(2)}</strong>)
 			</li>
@@ -32,7 +32,7 @@ export const AnalysisInformation = () => {
 	const topRankQuestions = summary.topRankDifferences.map((item) => {
 		return (
 			<li key={item.questionKey}>
-				<strong>{decodeQuestion(item.questionKey)}</strong> with a rank
+				<strong>{getQuestionTextByKey(item.questionKey)}</strong> with a rank
 				difference of <strong>{item.rankDifference}</strong> (LowRep rank:{" "}
 				<strong>{item.lowRepRank}</strong>, HighRep rank:{" "}
 				<strong>{item.highRepRank}</strong>)
@@ -41,7 +41,7 @@ export const AnalysisInformation = () => {
 	});
 
 	return (
-		<Card gray>
+		<Card>
 			<h2>Analysis</h2>
 			<p>
 				<em>Notes:</em> <strong>"LowRep"</strong> refers to less represented

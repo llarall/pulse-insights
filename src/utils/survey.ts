@@ -6,11 +6,11 @@ import type {
 } from "@/types/shared";
 import {
 	PULSE_QUESTIONS,
-	REP_QUESTION_KEY,
 	QUESTIONS_TO_IGNORE,
+	REP_QUESTION_TEXT,
 } from "../constants/surveyQuestions";
-import { decodeQuestion } from "./encoding";
 import { calculateTukeyInterpolatedMedian } from "./math";
+import { getOrCreateQuestionKey, getQuestionTextByKey } from "./questionKeyMap";
 
 /**
  * Calculates median stats for each question,
@@ -18,13 +18,14 @@ import { calculateTukeyInterpolatedMedian } from "./math";
  * using a column-oriented input (Record<questionKey, number[]>).
  */
 export const calculateGroupedSurveyStatsFromColumns = (
-	responses: TCourse["responses"],
-	baseKey: string = REP_QUESTION_KEY
+	responses: TCourse["responses"]
 ): TGroupedSurveyStats[] => {
 	const isValid = (n: number): boolean =>
 		typeof n === "number" && !isNaN(n) && n > 0 && n <= 6;
 
-	const baseResponses = responses[baseKey] ?? [];
+	const REP_QUESTION_KEY = getOrCreateQuestionKey(REP_QUESTION_TEXT);
+
+	const baseResponses = responses[REP_QUESTION_KEY] ?? [];
 	const repFiltered = baseResponses.map((n) => (isValid(n) ? n : null));
 	const repValid = repFiltered.filter((n): n is number => n !== null);
 	const repMedian = calculateTukeyInterpolatedMedian(repValid);
@@ -48,7 +49,6 @@ export const calculateGroupedSurveyStatsFromColumns = (
 
 		return {
 			questionKey,
-			questionText: decodeQuestion(questionKey),
 			overallMedian: calculateTukeyInterpolatedMedian(all),
 			lowRepMedian: calculateTukeyInterpolatedMedian(lowRep),
 			highRepMedian: calculateTukeyInterpolatedMedian(highRep),
@@ -72,7 +72,10 @@ export const rankBy = (
 		.sort((a, b) => {
 			const diff = getValue(b)! - getValue(a)!;
 			if (diff !== 0) return diff;
-			return a.questionKey.localeCompare(b.questionKey);
+			const aQuestionText = getQuestionTextByKey(a.questionKey);
+			const bQuestionText = getQuestionTextByKey(b.questionKey);
+
+			return aQuestionText.localeCompare(bQuestionText);
 		});
 
 	const ranks = new Map<string, number>();
@@ -104,18 +107,18 @@ export const rankGroupedStats = (
 };
 
 /**
- * Returns boolean if the questionText provided is a known pulse question
+ * Returns boolean if the questionKey provided is a known pulse question
  */
 export const isPulseQuestion = (
-	questionText: TGroupedSurveyStats["questionText"]
-) => PULSE_QUESTIONS.includes(questionText);
+	questionKey: TGroupedSurveyStats["questionKey"]
+) => PULSE_QUESTIONS.includes(getQuestionTextByKey(questionKey));
 
 /**
- * Returns boolean if the question should not be displayed on the results table
+ * Returns boolean if the questionKey provided should not be displayed on the results table
  */
 export const isIgnorableQuestion = (
-	questionText: TGroupedSurveyStats["questionText"]
-) => QUESTIONS_TO_IGNORE.includes(questionText);
+	questionKey: TGroupedSurveyStats["questionKey"]
+) => QUESTIONS_TO_IGNORE.includes(getQuestionTextByKey(questionKey));
 
 /**
  * Calculates key summary statistics from a list of ranked survey stats.

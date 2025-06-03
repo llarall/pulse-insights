@@ -5,7 +5,6 @@ import {
 	sanitizeCourses,
 } from "@/utils/array";
 import { describe, expect, it } from "vitest";
-import { encodeQuestion } from "./encoding";
 
 const mockSurveyResponses = [
 	{
@@ -19,10 +18,8 @@ const mockSurveyResponses = [
 		section: "001",
 		courseId: "ENGR101",
 		courseName: "Intro to Engineering",
-		[encodeQuestion("My instructor modeled and promoted inclusivity.")]: 6,
-		[encodeQuestion(
-			"If you read this question then select mostly disagree."
-		)]: 5,
+		"1": 6,
+		"2": 5,
 	},
 	{
 		response: "RESPONSE #2",
@@ -35,10 +32,8 @@ const mockSurveyResponses = [
 		section: "001",
 		courseId: "ENGR101",
 		courseName: "Intro to Engineering",
-		[encodeQuestion("My instructor modeled and promoted inclusivity.")]: 4,
-		[encodeQuestion(
-			"If you read this question then select mostly disagree."
-		)]: 4,
+		"1": 4,
+		"2": 4,
 	},
 ];
 
@@ -46,29 +41,18 @@ describe("aggregateResponses", () => {
 	it("should group question responses into arrays", () => {
 		const result = aggregateResponses(mockSurveyResponses);
 
-		const key1 = encodeQuestion(
-			"My instructor modeled and promoted inclusivity."
-		);
-		const key12 = encodeQuestion(
-			"If you read this question then select mostly disagree."
-		);
-
 		expect(result).toBeTypeOf("object");
-		expect(Array.isArray(result[key1])).toBe(true);
-		expect(Array.isArray(result[key12])).toBe(true);
+		expect(Array.isArray(result["1"])).toBe(true);
+		expect(Array.isArray(result["2"])).toBe(true);
 
-		expect(result[key1]).toEqual([6, 4]);
-		expect(result[key12]).toEqual([5, 4]);
+		expect(result["1"]).toEqual([6, 4]);
+		expect(result["2"]).toEqual([5, 4]);
 	});
 });
 
 describe("sanitizeCourses", () => {
 	it("should clean and convert valid numeric survey responses", () => {
-		const q1 = encodeQuestion("Question 1");
-		const q2 = encodeQuestion("Question 2");
-		const q3 = encodeQuestion("Question 3"); // will be removed (contains "yes")
-
-		const dirtyCourses: TUnsanitizedCourse[] = [
+		const unsanitizedCourses: TUnsanitizedCourse[] = [
 			{
 				response: "RESPONSE #1",
 				term: "Spring 2025",
@@ -81,21 +65,21 @@ describe("sanitizeCourses", () => {
 				courseId: "ENGR101",
 				courseName: "Intro to Engineering",
 				responses: {
-					[q1]: [6, "", -1],
-					[q2]: ["4", 5],
-					[q3]: ["yes", "no"], // should be removed
+					"1": [6, "", -1],
+					"2": ["4", 5],
+					"3": ["yes", "no"],
 				},
 			},
 		];
 
-		const result = sanitizeCourses(dirtyCourses);
+		const result = sanitizeCourses(unsanitizedCourses);
 
 		expect(result.length).toBe(1);
 		const cleaned = result[0];
 
-		expect(cleaned.responses[q1]).toEqual([6, 0, 0]);
-		expect(cleaned.responses[q2]).toEqual([4, 5]);
-		expect(cleaned.responses[q3]).toBeUndefined();
+		expect(cleaned.responses["1"]).toEqual([6, 0, 0]);
+		expect(cleaned.responses["2"]).toEqual([4, 5]);
+		expect(cleaned.responses["3"]).toBeUndefined();
 	});
 });
 
@@ -108,15 +92,8 @@ describe("groupCoursesWithSurveyResponses", () => {
 
 		expect(course.courseName).toBe("Intro to Engineering");
 
-		const q1 = encodeQuestion(
-			"My instructor modeled and promoted inclusivity."
-		);
-		const q2 = encodeQuestion(
-			"If you read this question then select mostly disagree."
-		);
-
-		expect(course.responses[q1]).toEqual([6, 4]);
-		expect(course.responses[q2]).toEqual([5, 4]);
+		expect(course.responses["1"]).toEqual([6, 4]);
+		expect(course.responses["2"]).toEqual([5, 4]);
 	});
 
 	it("creates separate courses when grouping fields differ", () => {

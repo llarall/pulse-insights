@@ -1,5 +1,7 @@
+import { PULSE_QUESTIONS } from "@/constants/surveyQuestions";
 import type { TGroupedSurveyStats, TRankedSurveyStats } from "@/types/shared";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
+import { getOrCreateQuestionKey, resetQuestionMap } from "./questionKeyMap";
 import {
 	calculateSummaryStats,
 	isPulseQuestion,
@@ -11,7 +13,6 @@ describe("rankBy", () => {
 	const mockData: TGroupedSurveyStats[] = [
 		{
 			questionKey: "question1",
-			questionText: "question1",
 			overallMedian: 5,
 			lowRepMedian: 0,
 			highRepMedian: 0,
@@ -21,7 +22,6 @@ describe("rankBy", () => {
 		},
 		{
 			questionKey: "question2",
-			questionText: "question2",
 			overallMedian: 3,
 			lowRepMedian: 0,
 			highRepMedian: 0,
@@ -31,7 +31,6 @@ describe("rankBy", () => {
 		},
 		{
 			questionKey: "question3",
-			questionText: "question3",
 			overallMedian: 5,
 			lowRepMedian: 0,
 			highRepMedian: 0,
@@ -45,7 +44,7 @@ describe("rankBy", () => {
 		const ranks = rankBy(mockData, (s) => s.overallMedian);
 
 		expect(ranks.get("question1")).toBe(1);
-		expect(ranks.get("question3")).toBe(2); // tie breaker
+		expect(ranks.get("question3")).toBe(2);
 		expect(ranks.get("question2")).toBe(3);
 	});
 });
@@ -54,7 +53,6 @@ describe("rankGroupedStats", () => {
 	const mockData: TGroupedSurveyStats[] = [
 		{
 			questionKey: "question1",
-			questionText: "question1",
 			overallMedian: 5,
 			lowRepMedian: 3,
 			highRepMedian: 6,
@@ -64,7 +62,6 @@ describe("rankGroupedStats", () => {
 		},
 		{
 			questionKey: "question2",
-			questionText: "question2",
 			overallMedian: 3,
 			lowRepMedian: 2,
 			highRepMedian: 4,
@@ -74,7 +71,6 @@ describe("rankGroupedStats", () => {
 		},
 		{
 			questionKey: "question3",
-			questionText: "question3",
 			overallMedian: 5,
 			lowRepMedian: 3,
 			highRepMedian: 6,
@@ -106,18 +102,21 @@ describe("rankGroupedStats", () => {
 });
 
 describe("isPulseQuestion", () => {
-	it("should return true when the question is a known pulse question", () => {
-		const result = isPulseQuestion(
-			"Students like me are REPRESENTED in my engineering major/minor."
-		);
+	beforeEach(() => {
+		resetQuestionMap();
+	});
 
-		expect(result).toEqual(true);
+	it("should return true when the question is a known pulse question", () => {
+		const pulseQuestion = PULSE_QUESTIONS[0];
+		const key = getOrCreateQuestionKey(pulseQuestion);
+
+		expect(isPulseQuestion(key)).toBe(true);
 	});
 
 	it("should return false when the question is not a known pulse question", () => {
-		const result = isPulseQuestion("question2");
+		const key = getOrCreateQuestionKey("not a pulse question");
 
-		expect(result).toEqual(false);
+		expect(isPulseQuestion(key)).toBe(false);
 	});
 });
 
@@ -125,7 +124,6 @@ describe("calculateSummaryStats", () => {
 	const mockStats: TRankedSurveyStats[] = [
 		{
 			questionKey: "question1",
-			questionText: "question1",
 			overallMedian: 5,
 			lowRepMedian: 4,
 			highRepMedian: 6,
@@ -138,7 +136,6 @@ describe("calculateSummaryStats", () => {
 		},
 		{
 			questionKey: "question2",
-			questionText: "question2",
 			overallMedian: 5,
 			lowRepMedian: 5,
 			highRepMedian: 5,
@@ -151,7 +148,6 @@ describe("calculateSummaryStats", () => {
 		},
 		{
 			questionKey: "question3",
-			questionText: "question2",
 			overallMedian: 5,
 			lowRepMedian: 6,
 			highRepMedian: 5,
