@@ -4,7 +4,7 @@ import { useSurveyStats } from "@/hooks/useSurveyStats";
 import { getQuestionTextByKey } from "@/utils/questionKeyMap";
 import { calculateSummaryStats } from "@/utils/survey";
 import { useAtomValue } from "jotai";
-import { Card } from "../Card/Card";
+import { Card } from "./Card/Card";
 
 /**
  * Displays the in-depth analysis on the response numbers

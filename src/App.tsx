@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "./App.module.css";
-import { AnalysisInformation } from "./components/AnalysisInformation/AnalysisInformation";
+import { AnalysisInformation } from "./components/AnalysisInformation";
 import { CourseInformation } from "./components/CourseInformation/CourseInformation";
 import { InfoSection } from "./components/InfoSection";
 import { StatsTable } from "./components/StatsTable/StatsTable";
