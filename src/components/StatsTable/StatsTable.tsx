@@ -7,7 +7,7 @@ import { isPulseQuestion } from "@/utils/survey";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useMemo, useState } from "react";
 import { Card } from "../Card/Card";
-import { StatsModal } from "../StatsModal/StatsModal";
+import { StatsModal } from "../StatsModal";
 import { MedianCell } from "./MedianCell";
 import styles from "./StatsTable.module.css";
 
