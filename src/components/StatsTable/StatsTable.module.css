@@ -27,10 +27,11 @@
 
 .clickableRow {
 	cursor: pointer;
-	border-left: 3px solid var(--beaverOrange);
+	border-left: 3px solid var(--solarFlare);
 	transition: background-color 0.2s ease;
 
 	&:hover {
+		border-left: 3px solid var(--beaverOrange);
 		background-color: var(--table-hover);
 
 		.lowValue {

@@ -1,4 +1,4 @@
 .lowValue {
-	background-color: #fde2e2;
+	background-color: var(--errorRed);
 	color: var(--paddletailBlack);
 }
