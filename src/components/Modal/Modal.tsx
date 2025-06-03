@@ -1,22 +1,17 @@
 import React, { useEffect, useRef } from "react";
 import styles from "./Modal.module.css";
 
-interface ModalProps {
+type TProps = {
 	isOpen: boolean;
 	onClose: () => void;
 	title: string;
 	children: React.ReactNode;
-}
+};
 
 /*
  *	Generic modal component
  */
-export const Modal: React.FC<ModalProps> = ({
-	isOpen,
-	onClose,
-	title,
-	children,
-}) => {
+export const Modal = ({ isOpen, onClose, title, children }: TProps) => {
 	const overlayRef = useRef<HTMLDivElement>(null);
 	const modalRef = useRef<HTMLDivElement>(null);
 
