@@ -8,6 +8,9 @@ interface ModalProps {
 	children: React.ReactNode;
 }
 
+/*
+ *	Generic modal component
+ */
 export const Modal: React.FC<ModalProps> = ({
 	isOpen,
 	onClose,
@@ -78,20 +81,27 @@ export const Modal: React.FC<ModalProps> = ({
 			onClick={onOverlayClick}
 			role="dialog"
 			aria-modal="true"
-			aria-labelledby="modal-title"
+			aria-labelledby={title}
 		>
 			<div ref={modalRef} className={styles.modal} role="document">
-				<div className={styles.header}>
-					<h2 id="modal-title">{title}</h2>
+				<div className={styles.topActions}>
 					<button
 						onClick={onClose}
 						aria-label="Close modal"
-						className={styles.closeButton}
+						className={styles.closeButtonTop}
 					>
 						&times;
 					</button>
 				</div>
-				<div>{children}</div>
+				<div className={styles.header}>
+					<h2 id="modal-title">{title}</h2>
+				</div>
+				<div className={styles.content}>
+					<div>{children}</div>
+				</div>
+				<div className={styles.bottomActions}>
+					<button onClick={onClose}>Close</button>
+				</div>
 			</div>
 		</div>
 	);
