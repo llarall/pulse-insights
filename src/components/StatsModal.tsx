@@ -32,10 +32,10 @@ export const StatsModal = () => {
 
 			{improvement && (
 				<div className="improvement-panel">
-					<p>
-						Based on your data, this area could be improved. You can explore
-						more here:{" "}
-						{improvement?.link && (
+					{improvement?.link && (
+						<p>
+							Based on your data, this area could be improved. You can explore
+							more here: (
 							<a
 								href={improvement.link}
 								target="_blank"
@@ -43,8 +43,9 @@ export const StatsModal = () => {
 							>
 								UDL Guidance
 							</a>
-						)}
-					</p>
+							)
+						</p>
+					)}
 					<ul>
 						{improvement.suggestions.map((point, i) => (
 							<li key={i}>{point}</li>
