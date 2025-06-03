@@ -81,7 +81,7 @@ export const Modal: React.FC<ModalProps> = ({
 			onClick={onOverlayClick}
 			role="dialog"
 			aria-modal="true"
-			aria-labelledby={title}
+			aria-labelledby="modal-title"
 		>
 			<div ref={modalRef} className={styles.modal} role="document">
 				<div className={styles.topActions}>
