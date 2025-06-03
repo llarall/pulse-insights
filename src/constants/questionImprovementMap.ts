@@ -1,5 +1,5 @@
 export type QuestionImprovementEntry = {
-	link?: string;
+	link: string;
 	suggestions: string[];
 };
 
