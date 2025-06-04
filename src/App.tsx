@@ -10,8 +10,6 @@ export const App = () => {
 		<main>
 			<h1>🧡 PULSE Insights Tool v{__APP_VERSION__}</h1>
 
-			<p>test</p>
-
 			<InfoSection />
 
 			<UploadInstructions />
