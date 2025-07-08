@@ -29,7 +29,6 @@ export type TGroupedSurveyStats = {
 	highRepMedian: number;
 	n: number;
 	lowRepN: number;
-	questionText: string;
 	highRepN: number;
 };
 

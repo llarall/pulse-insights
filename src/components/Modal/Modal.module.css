@@ -1,0 +1,52 @@
+.overlay {
+	align-items: center;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	height: 100vh;
+	justify-content: center;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100vw;
+	z-index: 1000;
+}
+
+.modal {
+	background: var(--bg-contrast);
+	border-radius: 8px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+	max-width: 500px;
+	padding: 1.5rem;
+	width: 100%;
+}
+
+.header {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+
+	h2 {
+		margin: 0;
+	}
+}
+
+.content {
+	margin: 2rem 0;
+}
+
+.topActions {
+	display: flex;
+	justify-content: end;
+}
+
+.closeButtonTop {
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+	cursor: pointer;
+}
+
+.bottomActions {
+	display: flex;
+	justify-content: end;
+}

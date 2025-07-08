@@ -1,4 +1,4 @@
-import { REQUIRED_HEADERS_MAP } from "@/constants/surveyResponse";
+import { REQUIRED_HEADERS_MAP } from "@/constants/surveyQuestions";
 import type {
 	TRow,
 	TSurveyResponse,
@@ -6,7 +6,7 @@ import type {
 } from "@/types/shared";
 import { surveyResponseValidator } from "@/validators/surveyResponseValidator";
 import { read, utils } from "xlsx";
-import { encodeQuestion } from "./encoding";
+import { getOrCreateQuestionKey, resetQuestionMap } from "./questionKeyMap";
 
 /**
  * Parses sheet rows from a spreadsheet into validated survey responses.
@@ -30,10 +30,9 @@ export const parseSheetRowsToResponses = (rows: TRow[]): TSurveyResponse[] => {
 			const rawHeader = headerRow[index];
 
 			const requiredHeader = REQUIRED_HEADERS_MAP[rawHeader];
-			const encodedQuestion = encodeQuestion(rawHeader);
-			const mappedKey = requiredHeader ?? encodedQuestion;
+			const key = requiredHeader ?? getOrCreateQuestionKey(rawHeader);
 
-			obj[mappedKey] = value;
+			obj[key] = value;
 		});
 
 		return surveyResponseValidator.parse(obj) as TSurveyResponse;
@@ -48,6 +47,9 @@ export const parseSurveyResponsesFromFile = async (
 	file: File
 ): Promise<TSurveyResponse[]> => {
 	const arrayBuffer = await file.arrayBuffer();
+
+	// clear question key map
+	resetQuestionMap();
 
 	const workbook = read(arrayBuffer, {
 		cellStyles: true,
