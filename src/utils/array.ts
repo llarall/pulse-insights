@@ -1,10 +1,11 @@
-import { REQUIRED_HEADERS_MAP } from "@/constants/surveyResponse";
+import { REQUIRED_HEADERS_MAP } from "@/constants/surveyQuestions";
 import type {
 	TCourse,
 	TSurveyResponse,
 	TSurveyResponseCourse,
 	TUnsanitizedCourse,
 } from "@/types/shared";
+import { isIgnorableQuestion } from "./survey";
 
 /**
  * Parses a set of survey responses for a single course,
@@ -24,6 +25,9 @@ export const aggregateResponses = (
 				)
 			)
 				continue;
+
+			// Skip known ignorable questions
+			if (isIgnorableQuestion(key)) continue;
 
 			if (!result[key]) result[key] = [];
 			result[key].push(val);
