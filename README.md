@@ -25,19 +25,11 @@ nvm use
 **Install packages**
 
 ```bash
-yarn install
-```
-or
-```bash
 npm install
 ```
 
 ## 🛠 Development
 
-```bash
-yarn dev
-```
-or
 ```bash
 npm run dev
 ```
@@ -47,10 +39,6 @@ Runs the app locally at http://localhost:5173.
 ## 🏗 Build for Production
 
 ```bash
-yarn build
-```
-or
-```bash
 npm run build
 ```
 
@@ -58,10 +46,6 @@ Outputs static files to the /dist folder.
 
 ## 🧪 Run Tests
 
-```bash
-yarn test
-```
-or
 ```bash
 npm run test
 ```
