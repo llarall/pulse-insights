@@ -9,7 +9,6 @@ https://web.engr.oregonstate.edu/~letawl/pulse/
 - [TypeScript](https://www.typescriptlang.org/) — Type safety
 - [Vitest](https://vitest.dev/) — Unit testing framework
 - [Jotai](https://jotai.org/) — Atomic state management (if you're using it)
-- ESLint + Prettier — Linting and code formatting
 - GitHub Actions — Automated CI (test on PRs)
 
 ---
