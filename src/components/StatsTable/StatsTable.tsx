@@ -10,6 +10,7 @@ import { Card } from "../Card/Card";
 import { StatsModal } from "../StatsModal";
 import { MedianCell } from "./MedianCell";
 import styles from "./StatsTable.module.css";
+import config from '@/config.json';
 
 const TABLE_HEADERS: Record<
 	keyof TRankedSurveyStats,
@@ -153,7 +154,7 @@ export const StatsTable = () => {
 							return (
 								<tr
 									key={questionKey}
-									className={containsLowMedian ? styles.clickableRow : ""}
+									className={(containsLowMedian && !config.DISABLE_STATS_MODALS) ? styles.clickableRow : ""}
 									onClick={
 										containsLowMedian
 											? () => handleLowStatClick(stat)

@@ -4,11 +4,15 @@ import { getQuestionTextByKey } from "@/utils/questionKeyMap";
 import { useAtom } from "jotai";
 import { RESET } from "jotai/utils";
 import { Modal } from "./Modal/Modal";
+import config from '@/config.json';
 
 /*
  *	Displays information and suggestions regarding low value stats
  */
 export const StatsModal = () => {
+
+	if (config.DISABLE_STATS_MODALS) return null;
+
 	const [responseModalValue, setResponseModalValue] = useAtom(statsModalAtom);
 
 	const { isOpen, stats } = responseModalValue || {};
