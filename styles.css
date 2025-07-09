@@ -72,12 +72,6 @@ table {
     margin-bottom: 20px;
 }
 
- /* highlight low values ----------*/
-.low-value {
-    background-color: rgb(254, 231, 237);
-    cursor:help;
-}
-
 /* ---------------------------------*/
 
 tr td:nth-child(1) {
