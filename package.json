@@ -1,7 +1,7 @@
 {
 	"name": "pulse-insights",
 	"private": true,
-	"version": "3.0-beta",
+	"version": "3.0.1-beta",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
