@@ -6,7 +6,7 @@
 		background-color: var(--table-bg);
 		color: var(--table-text);
 		border-collapse: collapse;
-		font-size: 0.875rem;
+		font-size: 1rem;
 		word-wrap: break-word;
 		width: 100%;
 

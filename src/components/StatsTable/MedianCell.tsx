@@ -10,9 +10,17 @@ type TProps = {
  */
 export const MedianCell = ({ value }: TProps) => {
 	const formattedValue = value.toFixed(2) || "—";
-	const isLow = value <= 5;
+	const isLow = value < 4;
+	const isHigh = value >= 5;
+	var cellClass = undefined;
+
+	if (isLow) {
+		cellClass = styles.lowValue;
+	} else if (isHigh) {
+		cellClass = styles.highValue;
+	}
 
 	return (
-		<td className={isLow ? styles.lowValue : undefined}>{formattedValue}</td>
+		<td className={cellClass}>{formattedValue}</td>
 	);
 };

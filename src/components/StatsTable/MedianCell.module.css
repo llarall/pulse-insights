@@ -1,4 +1,9 @@
 .lowValue {
-	background-color: var(--errorRed);
+	background-color: var(--lowYellow);
+	color: var(--paddletailBlack);
+}
+
+.highValue {
+	background-color: var(--highBlue);
 	color: var(--paddletailBlack);
 }
