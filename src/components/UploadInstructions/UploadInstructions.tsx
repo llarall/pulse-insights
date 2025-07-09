@@ -21,7 +21,7 @@ export const UploadInstructions = () => {
 
 	return (
 		<Card centered>
-			<h2>Step 1:</h2>
+			<h2>Step 1 of 2</h2>
 			<p>
 				Export your SLE data as an Excel file.{" "}
 				<button

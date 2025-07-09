@@ -81,7 +81,7 @@ export const UploadInput = () => {
 				onDragLeave={handleDragLeave}
 				onDrop={handleDrop}
 			>
-				<h2>Step 2:</h2>
+				<h2>Step 2 of 2</h2>
 				<p>
 					Drag & drop your Excel file here or click to select.
 					<br />
