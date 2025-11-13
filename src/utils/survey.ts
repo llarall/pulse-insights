@@ -111,7 +111,7 @@ export const rankGroupedStats = (
  */
 export const isPulseQuestion = (
 	questionKey: TGroupedSurveyStats["questionKey"]
-) => PULSE_QUESTIONS.includes(getQuestionTextByKey(questionKey));
+) => PULSE_QUESTIONS.includes(questionKey);
 
 /**
  * Returns boolean if the questionKey provided should not be displayed on the results table
