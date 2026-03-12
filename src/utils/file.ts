@@ -5,7 +5,7 @@ import type {
 	TUnsanitizedSurveyResponse,
 } from "@/types/shared";
 import { surveyResponseValidator } from "@/validators/surveyResponseValidator";
-import { read, utils } from "xlsx";
+import readXlsxFile, { readSheetNames } from "read-excel-file/browser";
 import { getOrCreateQuestionKey, resetQuestionMap } from "./questionKeyMap";
 
 /**
@@ -46,28 +46,21 @@ export const parseSheetRowsToResponses = (rows: TRow[]): TSurveyResponse[] => {
 export const parseSurveyResponsesFromFile = async (
 	file: File
 ): Promise<TSurveyResponse[]> => {
-	const arrayBuffer = await file.arrayBuffer();
-
 	// clear question key map
 	resetQuestionMap();
 
-	const workbook = read(arrayBuffer, {
-		cellStyles: true,
-		cellFormula: true,
-		cellDates: true,
-		cellNF: true,
-		sheetStubs: true,
-	});
+	// Read all sheet names from the Excel file and aggregate rows from each sheet
+	const sheetNames = await readSheetNames(file);
 
-	const { Sheets: sheets = {} } = workbook || {};
+	if (!sheetNames || sheetNames.length === 0) return [];
 
-	return Object.values(sheets).flatMap((sheet): TSurveyResponse[] => {
-		const rows = utils.sheet_to_json<TRow>(sheet, {
-			header: 1,
-			defval: null,
-			raw: false,
-		});
+	const allRows = await Promise.all(
+		sheetNames.map((sheetName) =>
+			readXlsxFile(file, { sheet: sheetName })
+		)
+	);
 
-		return parseSheetRowsToResponses(rows);
-	});
+	return allRows.flatMap((rows) =>
+		parseSheetRowsToResponses(rows as TRow[])
+	);
 };
