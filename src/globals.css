@@ -125,6 +125,17 @@ a:hover {
 	color: var(--darkBlue);
 }
 
+/* Dark theme link overrides */
+.theme-dark a,
+.theme-dark .linkButton {
+	color: #999EFF;
+}
+
+.theme-dark a:hover,
+.theme-dark .linkButton:hover {
+	color: #999EFF;
+}
+
 h1 {
 	font-size: 3.2em;
 	line-height: 1.1;
