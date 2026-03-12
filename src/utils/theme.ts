@@ -3,14 +3,14 @@ export type TTheme = "light" | "dark";
 const THEME_KEY = "theme";
 
 /**
- * Gets the user's saved theme or falls back to system preference.
+ * Gets the user's saved theme or falls back to dark mode by default.
  */
 export const getInitialTheme = (): TTheme => {
 	const stored = localStorage.getItem(THEME_KEY) as TTheme | null;
 	if (stored === "dark" || stored === "light") return stored;
 
-	const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-	return prefersDark ? "dark" : "light";
+	// Default to dark when no preference has been saved.
+	return "dark";
 };
 
 /**
