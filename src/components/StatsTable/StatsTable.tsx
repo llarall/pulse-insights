@@ -169,7 +169,7 @@ export const StatsTable = () => {
 									tabIndex={containsLowMedian ? 0 : undefined}
 								>
 									<td className={styles.questionCol}>
-										{isPulseQuestion(questionText) && "🧡 "}
+										{isPulseQuestion(questionKey) && "🧡 "}
 
 										{questionText}
 									</td>
