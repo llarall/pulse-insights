@@ -10,7 +10,11 @@ import {
 	REP_QUESTION_TEXT,
 } from "../constants/surveyQuestions";
 import { calculateTukeyInterpolatedMedian } from "./math";
-import { getOrCreateQuestionKey, getQuestionTextByKey } from "./questionKeyMap";
+import {
+	getOrCreateQuestionKey,
+	getQuestionKeyByText,
+	getQuestionTextByKey,
+} from "./questionKeyMap";
 
 /**
  * Calculates median stats for each question,
@@ -94,9 +98,15 @@ export const rankBy = (
 export const rankGroupedStats = (
 	stats: TGroupedSurveyStats[]
 ): TRankedSurveyStats[] => {
+	const repQuestionKey = getQuestionKeyByText(REP_QUESTION_TEXT);
+	const hasRepQuestion = !!repQuestionKey
+		&& stats.some((s) => s.questionKey === repQuestionKey);
+
 	const overallRanks = rankBy(stats, (s) => s.overallMedian);
-	const lowRepRanks = rankBy(stats, (s) => s.lowRepMedian);
-	const highRepRanks = rankBy(stats, (s) => s.highRepMedian);
+	const lowRepRanks = hasRepQuestion ? rankBy(stats, (s) => s.lowRepMedian) : new Map();
+	const highRepRanks = hasRepQuestion
+		? rankBy(stats, (s) => s.highRepMedian)
+		: new Map();
 
 	return stats.map((s) => ({
 		...s,

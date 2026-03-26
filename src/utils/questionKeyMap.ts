@@ -15,6 +15,18 @@ export const getOrCreateQuestionKey = (question: string): string => {
 };
 
 /**
+ * Returns a previously mapped key for question text (without creating one).
+ */
+export const getQuestionKeyByText = (question: string): string | undefined =>
+	questionTextToKey[question];
+
+/**
+ * Returns true when question text has been mapped.
+ */
+export const hasQuestionTextMapping = (question: string): boolean =>
+	question in questionTextToKey;
+
+/**
  * Reverse lookup: find question text by its assigned key.
  */
 export const getQuestionTextByKey = (key: string): string => {

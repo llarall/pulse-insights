@@ -12,14 +12,17 @@ import { MedianCell } from "./MedianCell";
 import styles from "./StatsTable.module.css";
 import config from '@/config.json';
 
+type TTableColumnKey = keyof TRankedSurveyStats | "difference";
+
 const TABLE_HEADERS: Record<
-	keyof TRankedSurveyStats,
+	TTableColumnKey,
 	{ label: string; sortable: boolean }
 > = {
 	questionKey: { label: "Question", sortable: true },
 	overallMedian: { label: "Median", sortable: true },
 	lowRepMedian: { label: "LowRep Median", sortable: true },
 	highRepMedian: { label: "HighRep Median", sortable: true },
+	difference: { label: "Difference", sortable: true },
 	n: { label: "n", sortable: true },
 	lowRepN: { label: "LowRep n", sortable: true },
 	highRepN: { label: "HighRep n", sortable: true },
@@ -37,7 +40,7 @@ export const StatsTable = () => {
 
 	const { rankedStats } = useSurveyStats(course?.responses);
 
-	const [sortKey, setSortKey] = useState<keyof TRankedSurveyStats>("rank");
+	const [sortKey, setSortKey] = useState<TTableColumnKey>("rank");
 	const [sortDirection, setSortDirection] = useState<"asc" | "desc" | "none">(
 		"none"
 	);
@@ -46,6 +49,13 @@ export const StatsTable = () => {
 		if (sortDirection === "none") return rankedStats;
 
 		return [...rankedStats].sort((a, b) => {
+			if (sortKey === "difference") {
+				const aDiff = a.highRepMedian - a.lowRepMedian;
+				const bDiff = b.highRepMedian - b.lowRepMedian;
+				if (aDiff === bDiff) return 0;
+				return sortDirection === "asc" ? aDiff - bDiff : bDiff - aDiff;
+			}
+
 			const aValue = a[sortKey];
 			const bValue = b[sortKey];
 
@@ -69,7 +79,7 @@ export const StatsTable = () => {
 		});
 	}, [rankedStats, sortKey, sortDirection]);
 
-	const handleSort = (key: keyof TRankedSurveyStats) => {
+	const handleSort = (key: TTableColumnKey) => {
 		if (sortKey === key) {
 			setSortDirection((prev) => {
 				if (prev === "asc") return "desc";
@@ -82,7 +92,7 @@ export const StatsTable = () => {
 		}
 	};
 
-	const getSortArrow = (key: keyof TRankedSurveyStats) => {
+	const getSortArrow = (key: TTableColumnKey) => {
 		if (sortKey !== key) return null;
 		if (sortDirection === "asc") return "▲";
 		if (sortDirection === "desc") return "▼";
@@ -179,6 +189,7 @@ export const StatsTable = () => {
 									<MedianCell value={lowRepMedian} />
 
 									<MedianCell value={highRepMedian} />
+									<td>{(highRepMedian - lowRepMedian).toFixed(2)}</td>
 
 									<td>{n}</td>
 									<td>{lowRepN}</td>

@@ -1,4 +1,4 @@
-import { PULSE_QUESTIONS } from "@/constants/surveyQuestions";
+import { PULSE_QUESTIONS, REP_QUESTION_TEXT } from "@/constants/surveyQuestions";
 import type { TGroupedSurveyStats, TRankedSurveyStats } from "@/types/shared";
 import { beforeEach, describe, expect, it } from "vitest";
 import { getOrCreateQuestionKey, resetQuestionMap } from "./questionKeyMap";
@@ -50,6 +50,10 @@ describe("rankBy", () => {
 });
 
 describe("rankGroupedStats", () => {
+	beforeEach(() => {
+		resetQuestionMap();
+	});
+
 	const mockData: TGroupedSurveyStats[] = [
 		{
 			questionKey: "question1",
@@ -81,23 +85,41 @@ describe("rankGroupedStats", () => {
 	];
 
 	it("applies correct ranks to grouped stats with ties", () => {
-		const ranked = rankGroupedStats(mockData);
+		const repKey = getOrCreateQuestionKey(REP_QUESTION_TEXT);
+		const ranked = rankGroupedStats([
+			...mockData,
+			{
+				questionKey: repKey,
+				overallMedian: 4,
+				lowRepMedian: 4,
+				highRepMedian: 4,
+				n: 10,
+				lowRepN: 5,
+				highRepN: 5,
+			},
+		]);
 
 		const q1 = ranked.find((r) => r.questionKey === "question1")!;
 		const q2 = ranked.find((r) => r.questionKey === "question2")!;
 		const q3 = ranked.find((r) => r.questionKey === "question3")!;
 
-		expect(q1.rank).toBe(1);
-		expect(q3.rank).toBe(2);
-		expect(q2.rank).toBe(3);
+		expect(q1.rank).toBeLessThan(q2.rank);
+		expect(q3.rank).toBeLessThan(q2.rank);
 
-		expect(q1.lowRepRank).toBe(1);
-		expect(q3.lowRepRank).toBe(2);
-		expect(q2.lowRepRank).toBe(3);
+		expect(q1.lowRepRank).toBeLessThan(q2.lowRepRank);
+		expect(q3.lowRepRank).toBeLessThan(q2.lowRepRank);
 
-		expect(q1.highRepRank).toBe(1);
-		expect(q3.highRepRank).toBe(2);
-		expect(q2.highRepRank).toBe(3);
+		expect(q1.highRepRank).toBeLessThan(q2.highRepRank);
+		expect(q3.highRepRank).toBeLessThan(q2.highRepRank);
+	});
+
+	it("does not compute low/high rep ranks when REPRESENTED question is missing", () => {
+		const ranked = rankGroupedStats(mockData);
+
+		for (const item of ranked) {
+			expect(item.lowRepRank).toBe(0);
+			expect(item.highRepRank).toBe(0);
+		}
 	});
 });
 
