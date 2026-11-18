@@ -10,7 +10,17 @@ const pkg = require("./package.json");
 
 export default defineConfig({
 	base: "./",
-	plugins: [react(), tsconfigPaths(), viteSingleFile()],
+	plugins: [
+		react(),
+		tsconfigPaths(),
+		viteSingleFile(),
+		{
+			name: "app-version-title",
+			transformIndexHtml(html) {
+				return html.replaceAll("%APP_VERSION%", pkg.version);
+			},
+		},
+	],
 	define: {
 		__APP_VERSION__: JSON.stringify(pkg.version), // This is so we can display the app version from the package.json
 	},

@@ -4,9 +4,11 @@ import {
 	sanitizeCourses,
 } from "@/utils/array";
 import { parseSurveyResponsesFromFile } from "@/utils/file";
+import { getMissingPulseQuestions } from "@/utils/survey";
 import { useSetAtom } from "jotai";
 import { useRef, useState } from "react";
 import { Card } from "../Card/Card";
+import { MissingPulseQuestionsModal } from "../MissingPulseQuestionsModal";
 import styles from "./UploadInput.module.css";
 
 /**
@@ -18,6 +20,9 @@ export const UploadInput = () => {
 	const [isDragging, setIsDragging] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [error, setError] = useState<string | null>(null);
+	const [missingPulseQuestions, setMissingPulseQuestions] = useState<string[]>(
+		[]
+	);
 
 	const handleDragOver = (e: React.DragEvent) => {
 		e.preventDefault();
@@ -39,9 +44,13 @@ export const UploadInput = () => {
 			if (groupedCourses.length > 0) {
 				setError("There is more than one course in your files.");
 				setCourse(groupedCourses[0]);
+				setMissingPulseQuestions(getMissingPulseQuestions());
+			} else {
+				setMissingPulseQuestions([]);
 			}
 			setError(null);
 		} catch (error: unknown) {
+			setMissingPulseQuestions([]);
 			if (error instanceof Error) {
 				setError(error.message);
 			} else {
@@ -98,6 +107,11 @@ export const UploadInput = () => {
 			/>
 
 			{error && <h2 className="error">{error}</h2>}
+
+			<MissingPulseQuestionsModal
+				missingQuestions={missingPulseQuestions}
+				onClose={() => setMissingPulseQuestions([])}
+			/>
 		</Card>
 	);
 };

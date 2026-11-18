@@ -1,7 +1,9 @@
+import { PULSE_QUESTIONS } from "@/constants/surveyQuestions";
 import type { TRow } from "@/types/shared";
-import { describe, expect, it } from "vitest";
-
 import { parseSheetRowsToResponses } from "@/utils/file";
+import { resetQuestionMap } from "@/utils/questionKeyMap";
+import { getMissingPulseQuestions } from "@/utils/survey";
+import { describe, expect, it } from "vitest";
 
 const HEADER_ROW = [
 	"RESPONSE #",
@@ -131,5 +133,53 @@ describe("parseSheetRowsToResponses", () => {
 	it("should return an empty array if there are no rows", () => {
 		const responses = parseSheetRowsToResponses([]);
 		expect(responses).toEqual([]);
+	});
+
+	it("detects that a parsed file is missing the PULSE questions", () => {
+		resetQuestionMap();
+
+		const rows: TRow[] = [
+			[
+				"RESPONSE #",
+				"Term",
+				"Instructor ID",
+				"First Name",
+				"Last Name",
+				"Subject",
+				"Number",
+				"Section",
+				"Course ID",
+				"Course Name",
+				"The course materials were accessible to me.",
+			],
+			[
+				"RESPONSE #1",
+				"Winter Term 2025 (202502)",
+				"900000000",
+				"John",
+				"Johnson",
+				"CS",
+				"361",
+				"400",
+				"32003",
+				"SOFTWARE ENGINEERING I",
+				"6.0",
+			],
+		];
+
+		parseSheetRowsToResponses(rows);
+
+		expect(getMissingPulseQuestions()).toEqual([...PULSE_QUESTIONS]);
+	});
+
+	it("detects that a parsed file includes the PULSE questions", () => {
+		resetQuestionMap();
+
+		parseSheetRowsToResponses([
+			HEADER_ROW,
+			HEADER_ROW.map(() => ""),
+		]);
+
+		expect(getMissingPulseQuestions()).toEqual([]);
 	});
 });

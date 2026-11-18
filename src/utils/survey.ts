@@ -14,6 +14,7 @@ import {
 	getOrCreateQuestionKey,
 	getQuestionKeyByText,
 	getQuestionTextByKey,
+	hasQuestionTextMapping,
 } from "./questionKeyMap";
 
 /**
@@ -122,6 +123,13 @@ export const rankGroupedStats = (
 export const isPulseQuestion = (
 	questionKey: TGroupedSurveyStats["questionKey"]
 ) => PULSE_QUESTIONS.includes(getQuestionTextByKey(questionKey));
+
+/**
+ * PULSE question texts that were not present in the most recently parsed file.
+ * Call this after parsing, while the question map still reflects that file.
+ */
+export const getMissingPulseQuestions = (): string[] =>
+	PULSE_QUESTIONS.filter((question) => !hasQuestionTextMapping(question));
 
 /**
  * Returns boolean if the questionKey provided should not be displayed on the results table

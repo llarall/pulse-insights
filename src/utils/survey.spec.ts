@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { getOrCreateQuestionKey, resetQuestionMap } from "./questionKeyMap";
 import {
 	calculateSummaryStats,
+	getMissingPulseQuestions,
 	isPulseQuestion,
 	rankBy,
 	rankGroupedStats,
@@ -139,6 +140,37 @@ describe("isPulseQuestion", () => {
 		const key = getOrCreateQuestionKey("not a pulse question");
 
 		expect(isPulseQuestion(key)).toBe(false);
+	});
+});
+
+describe("getMissingPulseQuestions", () => {
+	beforeEach(() => {
+		resetQuestionMap();
+	});
+
+	it("returns every PULSE question when the file did not include them", () => {
+		getOrCreateQuestionKey("The course materials were accessible to me.");
+
+		expect(getMissingPulseQuestions()).toEqual([...PULSE_QUESTIONS]);
+	});
+
+	it("returns only the PULSE questions that were not in the file", () => {
+		getOrCreateQuestionKey(PULSE_QUESTIONS[0]);
+		getOrCreateQuestionKey(PULSE_QUESTIONS[2]);
+
+		expect(getMissingPulseQuestions()).toEqual([
+			PULSE_QUESTIONS[1],
+			PULSE_QUESTIONS[3],
+			PULSE_QUESTIONS[4],
+		]);
+	});
+
+	it("returns an empty list when every PULSE question was in the file", () => {
+		for (const question of PULSE_QUESTIONS) {
+			getOrCreateQuestionKey(question);
+		}
+
+		expect(getMissingPulseQuestions()).toEqual([]);
 	});
 });
 
